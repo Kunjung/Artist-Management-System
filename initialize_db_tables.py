@@ -40,6 +40,7 @@ if __name__ == '__main__':
         print(list(test_values))
 
         # Create artist table
+        cursor.execute('DROP TABLE if exists music')
         cursor.execute('DROP TABLE if exists artist')
         cursor.execute('''
                        CREATE TABLE artist (
@@ -70,3 +71,18 @@ if __name__ == '__main__':
         # print(type(test_values))
         # print(test_values)
         print(list(test_values))
+
+        # Create music table
+        cursor.execute('DROP TABLE if exists music')
+        cursor.execute('''
+                       CREATE TABLE music (
+                            id integer primary key auto_increment, 
+                            artist_id integer,
+                            title varchar(255), 
+                            album_name varchar(255),
+                            genre ENUM('rnb', 'country', 'classic', 'rock', 'jazz'),
+                            created_at datetime default CURRENT_TIMESTAMP,
+                            updated_at datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                            foreign key(artist_id) references artist(id) on delete cascade
+                        )
+                       ''')
