@@ -68,8 +68,6 @@ if __name__ == '__main__':
         mysql.connection.commit()
         cursor.execute("SELECT * FROM artist")    
         test_values = cursor.fetchall()
-        # print(type(test_values))
-        # print(test_values)
         print(list(test_values))
 
         # Create music table
@@ -86,3 +84,12 @@ if __name__ == '__main__':
                             foreign key(artist_id) references artist(id) on delete cascade
                         )
                        ''')
+        # load example rows for music table
+        cursor.execute('''
+                       INSERT INTO music (artist_id, title, album_name, genre, created_at, updated_at) 
+                            values(1, 'Avid', 'eighty six', 'rock', now(), now())
+                       ''')
+        mysql.connection.commit()
+        cursor.execute("SELECT * FROM music")    
+        test_values = cursor.fetchall()
+        print(list(test_values))
