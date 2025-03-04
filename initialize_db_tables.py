@@ -19,7 +19,8 @@ if __name__ == '__main__':
                             address varchar(255),
                             created_at datetime default CURRENT_TIMESTAMP,
                             updated_at datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                            age integer)
+                            age integer
+                        )
                        ''')
         
         # load example rows for user table
@@ -39,3 +40,19 @@ if __name__ == '__main__':
         print(list(test_values))
 
         # cursor.execute("TRUNCATE TABLE user")
+
+        # Create artist table
+        cursor.execute('DROP TABLE if exists artist')
+        cursor.execute('''
+                       CREATE TABLE artist (
+                            id integer primary key auto_increment, 
+                            name varchar(255), 
+                            dob datetime,
+                            gender ENUM('m', 'f', 'o'),
+                            address varchar(255),
+                            first_release_year year,
+                            no_of_albums_released integer,
+                            created_at datetime default CURRENT_TIMESTAMP,
+                            updated_at datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+                        )
+                       ''')
