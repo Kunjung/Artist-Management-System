@@ -1,5 +1,14 @@
 from app import create_cursor, app, mysql
 
+def display_table_values(table_name, values):
+    print(' ' * 100)
+    print('Table Name: ' + table_name)
+    print('-' * 100)
+    for value in values:
+        print(value)
+    print('-' * 100)
+    print(' ' * 100)
+
 if __name__ == '__main__':
     with app.app_context():
         cursor = create_cursor()
@@ -34,10 +43,8 @@ if __name__ == '__main__':
                        ''')
         mysql.connection.commit()
         cursor.execute("SELECT * FROM user")    
-        test_values = cursor.fetchall()
-        # print(type(test_values))
-        # print(test_values)
-        print(list(test_values))
+        user_values = cursor.fetchall()
+        display_table_values('User', list(user_values))
 
         # Create artist table
         cursor.execute('DROP TABLE if exists music')
@@ -67,8 +74,8 @@ if __name__ == '__main__':
                        ''')
         mysql.connection.commit()
         cursor.execute("SELECT * FROM artist")    
-        test_values = cursor.fetchall()
-        print(list(test_values))
+        artist_values = cursor.fetchall()
+        display_table_values('Artist', list(artist_values))
 
         # Create music table
         cursor.execute('DROP TABLE if exists music')
@@ -89,7 +96,11 @@ if __name__ == '__main__':
                        INSERT INTO music (artist_id, title, album_name, genre, created_at, updated_at) 
                             values(1, 'Avid', 'eighty six', 'rock', now(), now())
                        ''')
+        cursor.execute('''
+                       INSERT INTO music (artist_id, title, album_name, genre, created_at, updated_at) 
+                            values(2, 'Hydra', 'overlord', 'country', now(), now())
+                       ''')
         mysql.connection.commit()
         cursor.execute("SELECT * FROM music")    
-        test_values = cursor.fetchall()
-        print(list(test_values))
+        music_values = cursor.fetchall()
+        display_table_values('Music', list(music_values))
