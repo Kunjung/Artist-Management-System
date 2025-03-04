@@ -39,8 +39,6 @@ if __name__ == '__main__':
         # print(test_values)
         print(list(test_values))
 
-        # cursor.execute("TRUNCATE TABLE user")
-
         # Create artist table
         cursor.execute('DROP TABLE if exists artist')
         cursor.execute('''
@@ -56,3 +54,19 @@ if __name__ == '__main__':
                             updated_at datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                         )
                        ''')
+        
+        # load example rows for user table
+        cursor.execute('''
+                       INSERT INTO artist (name, dob, gender, address, first_release_year, no_of_albums_released, created_at, updated_at) 
+                            values('Hiroyuki Sawano', '1980-09-12', 'f', 'Tokyo', 2014, 43, now(), now())
+                       ''')
+        cursor.execute('''
+                       INSERT INTO artist (name, dob, gender, address, first_release_year, no_of_albums_released, created_at, updated_at) 
+                            values('Artist MYTH & ROID', '1990-01-01', 'f', 'Tokyo', 2016, 10, now(), now())
+                       ''')
+        mysql.connection.commit()
+        cursor.execute("SELECT * FROM artist")    
+        test_values = cursor.fetchall()
+        # print(type(test_values))
+        # print(test_values)
+        print(list(test_values))
