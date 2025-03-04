@@ -26,6 +26,7 @@ if __name__ == '__main__':
                             dob datetime,
                             gender ENUM('m', 'f', 'o'),
                             address varchar(255),
+                            role ENUM('super_admin', 'artist_manager', 'artist') default 'artist',
                             created_at datetime default CURRENT_TIMESTAMP,
                             updated_at datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                             age integer
