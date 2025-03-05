@@ -52,6 +52,24 @@ def manage_user():
         # user is not logged in, so redirect to home
         return redirect(url_for('home'))
 
+@app.route('/edit_user/<id>')
+def edit_user(id):
+    if "username" in session and "userrole" in session:
+        username = session["username"]
+        userrole = session["userrole"]
+        if userrole == "super_admin":
+            return f"Userid: {id}"
+    return redirect(url_for('home'))
+
+@app.route('/delete_user/<id>')
+def delete_user(id):
+    if "username" in session and "userrole" in session:
+        username = session["username"]
+        userrole = session["userrole"]
+        if userrole == "super_admin":
+            return f"Userid: {id}"
+    return redirect(url_for('home'))
+
 @app.route('/manage_artist')
 def manage_artist():
     if "username" in session and "userrole" in session:
@@ -68,6 +86,25 @@ def manage_artist():
     else:
         # user is not logged in, so redirect to home
         return redirect(url_for('home'))
+
+@app.route('/edit_artist/<id>')
+def edit_artist(id):
+    if "username" in session and "userrole" in session:
+        username = session["username"]
+        userrole = session["userrole"]
+        if userrole == "super_admin":
+            return f"Artist Id: {id}"
+    return redirect(url_for('home'))
+
+@app.route('/delete_artist/<id>')
+def delete_artist(id):
+    if "username" in session and "userrole" in session:
+        username = session["username"]
+        userrole = session["userrole"]
+        if userrole == "super_admin":
+            return f"Artist Id: {id}"
+    return redirect(url_for('home'))
+
 
 @app.route('/login', methods=["POST"])
 def login():
