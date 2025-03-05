@@ -91,8 +91,8 @@ def signup():
         else:
             # validation completed, and email is new. so can create the new user in user table
             cursor.execute(f'''
-                       INSERT INTO user (first_name, last_name, email, password, phone, dob, gender, address, created_at, updated_at) 
-                            values('{first_name}', '{last_name}', '{email}', '{password}', '{phone}', '{dob}', '{gender}', '{address}', now(), now())
+                       INSERT INTO user (first_name, last_name, email, password, phone, dob, gender, address, role, created_at, updated_at) 
+                            values('{first_name}', '{last_name}', '{email}', '{password}', '{phone}', '{dob}', '{gender}', '{address}', '{role}', now(), now())
                        ''')
             mysql.connection.commit()
             return redirect(url_for('home'))
