@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <p>Name: {{username}}</p>
+  <p>Role: {{userrole}}</p>
+  <h3>Artist List</h3>
+  <table style="border: 1px solid black; border-style: dotted;">
+    <tr>
+        <th>Name</th>
+        <th>DOB</th>
+        <th>Gender</th>
+        <th>Address</th>
+        <th>First release year</th>
+        <th>No of albums released</th>
+    </tr>
+    <tr>
+        <td>test</td>
+        <td>test</td>
+        <td>test</td>
+        <td>test</td>
+        <td>test</td>
+        <td>test</td>
+    </tr>
+    <tr>
+        <td>data</td>
+        <td>data</td>
+        <td>data</td>
+        <td>data</td>
+        <td>data</td>
+        <td>data</td>
+    </tr>
+  </table>
+    
+  <br/>
+  <br/>
+  <a href="{{url_for('logout')}}">Logout</a>
+{% endblock %}

@@ -20,16 +20,45 @@ def create_cursor():
 
 @app.route('/')
 def home():
-    if "username" in session:
+    if "username" in session and "userrole" in session:
         # user is logged in. so redirect to dashboard
         return redirect(url_for("dashboard"))
     return render_template("index.html")
 
 @app.route('/dashboard')
 def dashboard():
-    if "username" in session:
+    if "username" in session and "userrole" in session:
         username = session["username"]
-        return render_template("dashboard.html", username= username)
+        userrole = session["userrole"]
+        return render_template("dashboard.html", username= username, userrole=userrole)
+    else:
+        # user is not logged in, so redirect to home
+        return redirect(url_for('home'))
+    
+@app.route('/manage_user')
+def manage_user():
+    if "username" in session and "userrole" in session:
+        username = session["username"]
+        userrole = session["userrole"]
+        if userrole == "super_admin":
+            # only user with super_admin role should have access to manage users
+            return render_template("manage_user.html", username= username, userrole=userrole)
+        else:
+            return "<h1>User doesn't have permission to view this page</h1>"
+    else:
+        # user is not logged in, so redirect to home
+        return redirect(url_for('home'))
+
+@app.route('/manage_artist')
+def manage_artist():
+    if "username" in session and "userrole" in session:
+        username = session["username"]
+        userrole = session["userrole"]
+        if userrole in ("super_admin", "artist_manager"):
+            # only user with super_admin or artist_manager role should have access to manage artist
+            return render_template("manage_artist.html", username= username, userrole=userrole)
+        else:
+            return "<h1>User doesn't have permission to view this page</h1>"
     else:
         # user is not logged in, so redirect to home
         return redirect(url_for('home'))
@@ -49,6 +78,7 @@ def login():
         if password == db_password:
             # return "<h1>Password Matched</h1>"
             session["username"] = user_info["first_name"] + " " + user_info["last_name"]
+            session["userrole"] = user_info["role"]
             return redirect(url_for("dashboard"))
         else:
             return "<h1>Password Incorrect</h1>"
@@ -104,6 +134,7 @@ def signup():
 @app.route('/logout')
 def logout():
     session.pop("username", None)
+    session.pop("userrole", None)
     return redirect(url_for("home"))
 
 @app.route('/test_db_connection')

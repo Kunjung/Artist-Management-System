@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>Logged in user: {{username}}</h2>
-  <p>Artist Management Dashboard</p>
+  <p>Name: {{username}}</p>
+  <p>Role: {{userrole}}</p>
+  <h3>
+    <a href="{{url_for('manage_user')}}">Manage User</a>
+    ......
+    <a href="{{url_for('manage_artist')}}">Manage Artist</a>
+  </h3>
+  <br/>
+  <br/>
   <a href="{{url_for('logout')}}">Logout</a>
 {% endblock %}
