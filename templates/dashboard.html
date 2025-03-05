@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Logged in user: {{username}}</h2>
+  <p>Artist Management Dashboard</p>
+  <a href="{{url_for('logout')}}">Logout</a>
+{% endblock %}
