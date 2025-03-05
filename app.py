@@ -27,8 +27,12 @@ def home():
 
 @app.route('/dashboard')
 def dashboard():
-    username = session["username"]
-    return render_template("dashboard.html", username= username)
+    if "username" in session:
+        username = session["username"]
+        return render_template("dashboard.html", username= username)
+    else:
+        # user is not logged in, so redirect to home
+        return redirect(url_for('home'))
 
 @app.route('/login', methods=["POST"])
 def login():
