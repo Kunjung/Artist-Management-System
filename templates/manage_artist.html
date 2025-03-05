@@ -13,6 +13,7 @@
         <th>Address</th>
         <th>First release year</th>
         <th>No of albums released</th>
+        <th>Music</th>
         <th>Action</th>
     </tr>
     {% for artist in artistlist %}
@@ -24,6 +25,9 @@
         <td>{{artist['address']}}</td>
         <td>{{artist['first_release_year']}}</td>
         <td>{{artist['no_of_albums_released']}}</td>
+        <td>
+            <a href={{url_for('list_artist_songs', artist_id=artist.id)}}>View songs</a>
+        </td>
         <td>
             <a href={{url_for('edit_artist', id=artist.id)}}>Edit</a> ...
             <a href={{url_for('delete_artist', id=artist.id)}}>Delete</a>

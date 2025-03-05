@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <p>Name: {{username}}</p>
+  <p>Role: {{userrole}}</p>
+  <h3>Song List by Artist: {{artist_name}}</h3>
+  <table style="border: 1px solid black; border-style: dotted;">
+    <tr>
+        <th>ID</th>
+        <th>Artist ID</th>
+        <th>Title</th>
+        <th>Album Name</th>
+        <th>Genre</th>
+        <th>Action</th>
+    </tr>
+    {% for song in songlist %}
+    <tr>
+        <td>{{song['id']}}</td>
+        <td>{{song['artist_id']}}</td>
+        <td>{{song['title']}}</td>
+        <td>{{song['album_name']}}</td>
+        <td>{{song['genre']}}</td>
+        <td>
+            <a href={{url_for('edit_music', id=song.id)}}>Edit</a> ...
+            <a href={{url_for('delete_music', id=song.id)}}>Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+  </table>
+    
+  <br/>
+  <br/>
+  <a href="{{url_for('dashboard')}}">Return to dashboard</a>
+  <br/>
+  <a href="{{url_for('logout')}}">Logout</a>
+{% endblock %}

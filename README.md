@@ -12,4 +12,5 @@
 9. TODO: add password hashing
 10. TODO: create CRUD for user, artist, and music in admin dashboard
 11. TODO: add pagination for user, artist, and music
-12. ...
+12. TODO: CSV Import and Export for the Artist
+13. ...

@@ -105,6 +105,36 @@ def delete_artist(id):
             return f"Artist Id: {id}"
     return redirect(url_for('home'))
 
+@app.route('/list_artist_songs/<artist_id>')
+def list_artist_songs(artist_id):
+    cursor = create_cursor()
+    cursor.execute(f"SELECT * FROM artist WHERE id={artist_id}")
+    artist_info = cursor.fetchone()
+    if artist_info:
+        artist_name = artist_info['name']
+        cursor.execute(f"SELECT * FROM music WHERE artist_id={artist_id}")
+        songlist = cursor.fetchall()
+        return render_template("list_artist_songs.html", artist_name=artist_name, songlist=songlist)
+    else:
+        return f"Artist not found: {artist_id}"
+    
+@app.route('/edit_music/<id>')
+def edit_music(id):
+    if "username" in session and "userrole" in session:
+        username = session["username"]
+        userrole = session["userrole"]
+        if userrole == "super_admin":
+            return f"Music Id: {id}"
+    return redirect(url_for('home'))
+
+@app.route('/delete_music/<id>')
+def delete_music(id):
+    if "username" in session and "userrole" in session:
+        username = session["username"]
+        userrole = session["userrole"]
+        if userrole == "super_admin":
+            return f"Music Id: {id}"
+    return redirect(url_for('home'))
 
 @app.route('/login', methods=["POST"])
 def login():
