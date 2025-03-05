@@ -6,29 +6,36 @@
   <h3>User List</h3>
   <table style="border: 1px solid black; border-style: dotted;">
     <tr>
+        <th>ID</th>
         <th>First name</th>
         <th>Last name</th>
         <th>Email</th>
         <th>Password</th>
+        <th>Phone</th>
+        <th>Date of Birth</th>
+        <th>Gender</th>
         <th>Address</th>
+        <th>Role</th>
     </tr>
+    {% for user in userlist %}
     <tr>
-        <td>test</td>
-        <td>test</td>
-        <td>test</td>
-        <td>test</td>
-        <td>test</td>
+        <td>{{user['id']}}</td>
+        <td>{{user['first_name']}}</td>
+        <td>{{user['last_name']}}</td>
+        <td>{{user['email']}}</td>
+        <td>{{user['password']}}</td>
+        <td>{{user['phone']}}</td>
+        <td>{{user['dob']}}</td>
+        <td>{{user['gender']}}</td>
+        <td>{{user['address']}}</td>
+        <td>{{user['role']}}</td>
     </tr>
-    <tr>
-        <td>data</td>
-        <td>data</td>
-        <td>data</td>
-        <td>data</td>
-        <td>data</td>
-    </tr>
+    {% endfor %}
   </table>
     
   <br/>
+  <br/>
+  <a href="{{url_for('dashboard')}}">Return to dashboard</a>
   <br/>
   <a href="{{url_for('logout')}}">Logout</a>
 {% endblock %}

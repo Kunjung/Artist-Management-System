@@ -42,7 +42,10 @@ def manage_user():
         userrole = session["userrole"]
         if userrole == "super_admin":
             # only user with super_admin role should have access to manage users
-            return render_template("manage_user.html", username= username, userrole=userrole)
+            cursor = create_cursor()
+            cursor.execute(f"SELECT * FROM user")
+            userlist = cursor.fetchall()
+            return render_template("manage_user.html", username= username, userrole=userrole, userlist=userlist)
         else:
             return "<h1>User doesn't have permission to view this page</h1>"
     else:
@@ -56,7 +59,10 @@ def manage_artist():
         userrole = session["userrole"]
         if userrole in ("super_admin", "artist_manager"):
             # only user with super_admin or artist_manager role should have access to manage artist
-            return render_template("manage_artist.html", username= username, userrole=userrole)
+            cursor = create_cursor()
+            cursor.execute(f"SELECT * FROM artist")
+            artistlist = cursor.fetchall()
+            return render_template("manage_artist.html", username= username, userrole=userrole, artistlist=artistlist)
         else:
             return "<h1>User doesn't have permission to view this page</h1>"
     else:
