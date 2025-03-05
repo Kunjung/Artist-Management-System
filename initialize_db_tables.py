@@ -28,19 +28,18 @@ if __name__ == '__main__':
                             address varchar(255),
                             role ENUM('super_admin', 'artist_manager', 'artist') default 'artist',
                             created_at datetime default CURRENT_TIMESTAMP,
-                            updated_at datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                            age integer
+                            updated_at datetime default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                         )
                        ''')
         
         # load example rows for user table
         cursor.execute('''
-                       INSERT INTO user (first_name, last_name, email, password, phone, dob, gender, address, created_at, updated_at, age) 
-                            values('Natsuki', 'Subaru', 'subaru@rezero.com', 'subarupassword', '989979966899', '1995-12-26', 'm', 'Tokyo', now(), now(), 29)
+                       INSERT INTO user (first_name, last_name, email, password, phone, dob, gender, address, created_at, updated_at) 
+                            values('Natsuki', 'Subaru', 'subaru@rezero.com', 'subarupassword', '989979966899', '1995-12-26', 'm', 'Tokyo', now(), now())
                        ''')
         cursor.execute('''
-                       INSERT INTO user (first_name, last_name, email, password, phone, dob, gender, address, created_at, updated_at, age) 
-                            values('Emilia', 'Tan', 'emilia@rezero.com', 'emiliapassword', '38375956190', '1997-09-30', 'f', 'Elior Forest', now(), now(), 27)
+                       INSERT INTO user (first_name, last_name, email, password, phone, dob, gender, address, created_at, updated_at) 
+                            values('Emilia', 'Tan', 'emilia@rezero.com', 'emiliapassword', '38375956190', '1997-09-30', 'f', 'Elior Forest', now(), now())
                        ''')
         mysql.connection.commit()
         cursor.execute("SELECT * FROM user")    
