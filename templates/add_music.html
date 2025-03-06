@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <p>Adding new music for artist: {{artist_name}}</p>
+  <form action="{{url_for('add_music', artist_id=artist_id)}}" method="post">
+    <p>
+        <label>Title</label>
+        <input type="text" name="title" required>
+    </p>
+    <p>
+        <label>Album name</label>
+        <input type="text" name="album_name" required>
+    </p>
+    <p>
+        <label>Genre</label>
+        <input type="radio" name="genre" value="rnb">
+        <label>Rnb</label>
+        <input type="radio" name="genre" value="country">
+        <label>Country</label>
+        <input type="radio" name="genre" value="classic">
+        <label>Classic</label>
+        <input type="radio" name="genre" value="rock">
+        <label>Rock</label>
+        <input type="radio" name="genre" value="jazz">
+        <label>Jazz</label>
+    </p>
+    <p>
+        <input type="submit" value="Add New Song">
+    </p>
+  </form>
+  <br/>
+  <br/>
+  <a href="{{url_for('dashboard')}}">Return to dashboard</a>
+  <br/>
+  <a href="{{url_for('logout')}}">Logout</a>
+{% endblock %}

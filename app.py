@@ -368,7 +368,43 @@ def list_artist_songs(artist_id):
             else:
                 return f"Artist not found: {artist_id}"
     return redirect(url_for('home'))
-    
+
+@app.route('/add_music/<int:artist_id>', methods=['GET', 'POST'])
+def add_music(artist_id):
+    if "username" in session and "userrole" in session:
+        username = session["username"]
+        userrole = session["userrole"]
+        if userrole in ("super_admin", "artist_manager", "artist"):
+            if request.method == "POST":
+                # add new user and redirect to manage_users dashboard
+                title = request.form["title"]
+                album_name = request.form["album_name"]
+                genre = request.form["genre"]
+                
+                music_data = {
+                    'artist_id': artist_id,
+                    'title': title,
+                    'album_name': album_name,
+                    'genre': genre
+                }
+
+                # after validation is correct, create a new entry of the data in the user table
+                cursor = create_cursor()
+                # validation completed, and email is new. so can create the new user in user table
+                cursor.execute(f'''
+                        INSERT INTO music (artist_id, title, album_name, genre, created_at, updated_at) 
+                            values({artist_id}, '{title}', '{album_name}', '{genre}', now(), now())
+                        ''')
+                mysql.connection.commit()
+                return redirect(url_for('list_artist_songs', artist_id=artist_id))
+            elif request.method == "GET":
+                cursor = create_cursor()
+                cursor.execute(f"SELECT * FROM artist where id={artist_id} LIMIT 1")
+                artist_info = cursor.fetchone()
+                artist_name = artist_info['name']
+                return render_template("add_music.html", artist_id=artist_id, artist_name=artist_name)
+    return redirect(url_for('home'))
+
 @app.route('/edit_music/<id>')
 def edit_music(id):
     if "username" in session and "userrole" in session:

@@ -3,6 +3,7 @@
 {% block content %}
   <p>Name: {{username}}</p>
   <p>Role: {{userrole}}</p>
+  <h3><a href="{{url_for('add_music', artist_id=artist_id)}}">Add New Song</a></h3>
   <h3>Song List by Artist: {{artist_name}}</h3>
   <table style="border: 1px solid black; border-style: dotted;">
     <tr>
