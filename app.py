@@ -221,6 +221,44 @@ def manage_artist():
         # user is not logged in, so redirect to home
         return redirect(url_for('home'))
 
+@app.route('/add_artist', methods=['GET', 'POST'])
+def add_artist():
+    if "username" in session and "userrole" in session:
+        username = session["username"]
+        userrole = session["userrole"]
+        if userrole == "super_admin":
+            if request.method == "POST":
+                # add new user and redirect to manage_users dashboard
+                name = request.form["name"]
+                dob = request.form["dob"]
+                gender = request.form["gender"]
+                address = request.form["address"]
+                first_release_year = request.form["first_release_year"]
+                no_of_albums_released = request.form["no_of_albums_released"]
+
+                # TODO: validate form data is as expected
+                artist_data = {
+                    'name': name,
+                    'dob': dob,
+                    'gender': gender,
+                    'address': address,
+                    'first_release_year': first_release_year,
+                    'no_of_albums_released': no_of_albums_released
+                }
+
+                # after validation is correct, create a new entry of the data in the user table
+                cursor = create_cursor()
+                # validation completed, and email is new. so can create the new user in user table
+                cursor.execute(f'''
+                        INSERT INTO artist (name, dob, gender, address, first_release_year, no_of_albums_released, created_at, updated_at) 
+                            values('{name}', '{dob}', '{gender}', '{address}', {first_release_year}, {no_of_albums_released}, now(), now())
+                        ''')
+                mysql.connection.commit()
+                return redirect(url_for('manage_artist'))
+            elif request.method == "GET":
+                return render_template("add_artist.html")
+    return redirect(url_for('home'))
+
 @app.route('/edit_artist/<id>')
 def edit_artist(id):
     if "username" in session and "userrole" in session:

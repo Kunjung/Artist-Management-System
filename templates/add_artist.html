@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <form action="{{url_for('add_artist')}}" method="post">
+    <p>
+        <label>Name</label>
+        <input type="text" name="name" required>
+    </p>
+    <p>
+        <label>Address</label>
+        <input type="text" name="address" required>
+    </p>
+    <p>
+        <label>Gender</label>
+        <input type="radio" name="gender" value="m">
+        <label>Male</label>
+        <input type="radio" name="gender" value="f">
+        <label>Female</label>
+        <input type="radio" name="gender" value="o">
+        <label>Other</label>
+    </p>
+    <p>
+        <label>First Release Year</label>
+        <input type="text" name="first_release_year" required>
+    </p>
+    <p>
+        <label>No. of Albums Released</label>
+        <input type="text" name="no_of_albums_released" required>
+    </p>
+    <p>
+        <label>Date of Birth</label>
+        <input type="date" name="dob" required>
+    </p>
+    <p>
+        <input type="submit" value="Add New Artist">
+    </p>
+  </form>
+  <br/>
+  <br/>
+  <a href="{{url_for('dashboard')}}">Return to dashboard</a>
+  <br/>
+  <a href="{{url_for('logout')}}">Logout</a>
+{% endblock %}
