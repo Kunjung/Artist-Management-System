@@ -39,13 +39,15 @@ def dashboard():
         return redirect(url_for('home'))
     
 @app.route('/manage_user')
-@app.route('/manage_user/<int:page>')
-def manage_user(page=1):
+def manage_user():
     if "username" in session and "userrole" in session:
         username = session["username"]
         userrole = session["userrole"]
         if userrole == "super_admin":
             # only user with super_admin role should have access to manage users
+            page = request.args.get('page', 1)
+            page = int(page)
+            print("page: ", page)
             cursor = create_cursor()
             offset = PAGINATION_SIZE * (page - 1)
             cursor.execute(f"SELECT * FROM user LIMIT {PAGINATION_SIZE} OFFSET {offset}")
@@ -81,13 +83,15 @@ def delete_user(id):
     return redirect(url_for('home'))
 
 @app.route('/manage_artist')
-@app.route('/manage_artist/<int:page>')
-def manage_artist(page=1):
+def manage_artist():
     if "username" in session and "userrole" in session:
         username = session["username"]
         userrole = session["userrole"]
         if userrole in ("super_admin", "artist_manager"):
             # only user with super_admin or artist_manager role should have access to manage artist
+            page = request.args.get('page', 1)
+            page = int(page)
+            print("page: ", page)
             cursor = create_cursor()
             offset = PAGINATION_SIZE * (page - 1)
             cursor.execute(f"SELECT * FROM artist LIMIT {PAGINATION_SIZE} OFFSET {offset}")
