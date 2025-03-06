@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 from MySQLdb.cursors import DictCursor
 
+PAGINATION_SIZE = 1
+
 app = Flask(__name__)
 
 app.secret_key = 'secret_key'
@@ -36,14 +38,16 @@ def dashboard():
         return redirect(url_for('home'))
     
 @app.route('/manage_user')
-def manage_user():
+@app.route('/manage_user/<int:page>')
+def manage_user(page=1):
     if "username" in session and "userrole" in session:
         username = session["username"]
         userrole = session["userrole"]
         if userrole == "super_admin":
             # only user with super_admin role should have access to manage users
             cursor = create_cursor()
-            cursor.execute(f"SELECT * FROM user")
+            offset = PAGINATION_SIZE * (page - 1)
+            cursor.execute(f"SELECT * FROM user LIMIT {PAGINATION_SIZE} OFFSET {offset}")
             userlist = cursor.fetchall()
             return render_template("manage_user.html", username= username, userrole=userrole, userlist=userlist)
         else:
@@ -71,14 +75,16 @@ def delete_user(id):
     return redirect(url_for('home'))
 
 @app.route('/manage_artist')
-def manage_artist():
+@app.route('/manage_artist/<int:page>')
+def manage_artist(page=1):
     if "username" in session and "userrole" in session:
         username = session["username"]
         userrole = session["userrole"]
         if userrole in ("super_admin", "artist_manager"):
             # only user with super_admin or artist_manager role should have access to manage artist
             cursor = create_cursor()
-            cursor.execute(f"SELECT * FROM artist")
+            offset = PAGINATION_SIZE * (page - 1)
+            cursor.execute(f"SELECT * FROM artist LIMIT {PAGINATION_SIZE} OFFSET {offset}")
             artistlist = cursor.fetchall()
             return render_template("manage_artist.html", username= username, userrole=userrole, artistlist=artistlist)
         else:
