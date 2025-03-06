@@ -11,7 +11,7 @@
 8. Added pagination while listing users, artists, and music in dashboard
 9. Added functionality to add new user from the admin dashboard
 10. Added functionality to update existing user from the admin dashboard
-11. TODO: add functionality to delete existing user from the admin dashboard
+11. Added functionality to delete existing user from the admin dashboard
 11. TODO: add validation for signup
 12. TODO: add password hashing
 13. TODO: create CRUD for user, artist, and music in admin dashboard
