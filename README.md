@@ -12,8 +12,9 @@
 9. Added functionality to add new user from the admin dashboard
 10. Added functionality to update existing user from the admin dashboard
 11. Added functionality to delete existing user from the admin dashboard
-11. TODO: add validation for signup
-12. TODO: add password hashing
-13. TODO: create CRUD for user, artist, and music in admin dashboard
-14. TODO: CSV Import and Export for the Artist
-15. ...
+12. CSV import and export added for artist
+13. TODO: add validation for signup
+14. TODO: add password hashing
+15. TODO: create CRUD for user, artist, and music in admin dashboard
+16. TODO: Add validation check while importing data for artist from CSV
+17. ...
