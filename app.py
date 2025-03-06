@@ -92,7 +92,12 @@ def manage_artist(page=1):
             offset = PAGINATION_SIZE * (page - 1)
             cursor.execute(f"SELECT * FROM artist LIMIT {PAGINATION_SIZE} OFFSET {offset}")
             artistlist = cursor.fetchall()
-            return render_template("manage_artist.html", username= username, userrole=userrole, artistlist=artistlist)
+            cursor.execute(f"SELECT count(*) as count FROM artist")
+            total_artist_count = cursor.fetchone()['count']
+            print("total_artist_count: ", total_artist_count)
+            total_page = math.ceil(total_artist_count / PAGINATION_SIZE)
+            print("total_page: ", total_page)
+            return render_template("manage_artist.html", username= username, userrole=userrole, artistlist=artistlist, total_page=total_page, current_page=page)
         else:
             return "<h1>User doesn't have permission to view this page</h1>"
     else:

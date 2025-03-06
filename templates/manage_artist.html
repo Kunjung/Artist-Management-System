@@ -35,7 +35,15 @@
     </tr>
     {% endfor %}
   </table>
-    
+  <p>
+    {% if current_page > 1 %}
+      <a href="{{url_for('manage_artist', page=current_page-1)}}">Prev</a>
+    {% endif %}
+    <span>{{current_page}} of {{total_page}}</span>
+    {% if current_page < total_page %}
+      <a href="{{url_for('manage_artist', page=current_page+1)}}">Next</a>
+    {% endif %}
+  </p>
   <br/>
   <br/>
   <a href="{{url_for('dashboard')}}">Return to dashboard</a>
