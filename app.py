@@ -318,7 +318,18 @@ def delete_artist(id):
         username = session["username"]
         userrole = session["userrole"]
         if userrole == "super_admin":
-            return f"Artist Id: {id}"
+            cursor = create_cursor()
+            cursor.execute(f"SELECT * from artist where id='{id}'")
+            user_info = cursor.fetchone()
+            if not user_info:
+                return "<h1>Artist ID is not present</h1>"
+            else:
+                delete_query = f"DELETE FROM artist WHERE id={id}"
+                print("delete_query: ")
+                print(delete_query)
+                cursor.execute(delete_query)
+                mysql.connection.commit()
+                return redirect(url_for('manage_artist'))
     return redirect(url_for('home'))
 
 @app.route('/list_artist_songs/<artist_id>')
