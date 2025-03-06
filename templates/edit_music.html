@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <form action="{{url_for('edit_music',id=music_info['id'])}}" method="post">
+    <p>
+        <label>Title</label>
+        <input type="text" name="title" value="{{music_info['title']}}" required>
+    </p>
+    <p>
+        <label>Album name</label>
+        <input type="text" name="album_name" value="{{music_info['album_name']}}" required>
+    </p>
+    <p>
+        <label>Genre</label>
+
+        {% if music_info['genre'] == 'rnb' %}
+            <input type="radio" name="genre" value="rnb" checked>
+        {% else %}
+            <input type="radio" name="genre" value="rnb">
+        {% endif %}
+        <label>Rnb</label>
+
+        {% if music_info['genre'] == 'country' %}
+            <input type="radio" name="genre" value="country" checked>
+        {% else %}
+            <input type="radio" name="genre" value="country">
+        {% endif %}
+        <label>Country</label>
+
+        {% if music_info['genre'] == 'classic' %}
+            <input type="radio" name="genre" value="classic" checked>
+        {% else %}
+            <input type="radio" name="genre" value="classic">
+        {% endif %}
+        <label>Classic</label>
+
+        {% if music_info['genre'] == 'rock' %}
+            <input type="radio" name="genre" value="rock" checked>
+        {% else %}
+            <input type="radio" name="genre" value="rock">
+        {% endif %}
+        <label>Rock</label>
+
+        {% if music_info['genre'] == 'jazz' %}
+            <input type="radio" name="genre" value="jazz" checked>
+        {% else %}
+            <input type="radio" name="genre" value="jazz">
+        {% endif %}
+        <label>Jazz</label>
+    </p>
+    <p>
+        <input type="submit" value="Complete Update">
+    </p>
+  </form>
+  <br/>
+  <br/>
+  <a href="{{url_for('dashboard')}}">Return to dashboard</a>
+  <br/>
+  <a href="{{url_for('logout')}}">Logout</a>
+{% endblock %}

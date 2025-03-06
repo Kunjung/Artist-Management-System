@@ -405,13 +405,52 @@ def add_music(artist_id):
                 return render_template("add_music.html", artist_id=artist_id, artist_name=artist_name)
     return redirect(url_for('home'))
 
-@app.route('/edit_music/<id>')
+@app.route('/edit_music/<int:id>', methods=['GET', 'POST'])
 def edit_music(id):
     if "username" in session and "userrole" in session:
         username = session["username"]
         userrole = session["userrole"]
         if userrole == "super_admin":
-            return f"Music Id: {id}"
+            if request.method == "POST":
+                cursor = create_cursor()
+                cursor.execute(f"SELECT artist_id from music where id={id}")
+                artist_id = cursor.fetchone()['artist_id']
+                title = request.form["title"]
+                album_name = request.form["album_name"]
+                genre = request.form["genre"]
+                
+                music_data = {
+                    'artist_id': artist_id,
+                    'title': title,
+                    'album_name': album_name,
+                    'genre': genre
+                }
+
+                cursor = create_cursor()
+                cursor.execute(f"SELECT * from music where id={id}")
+                music_info = cursor.fetchone()
+                if not music_info:
+                    return "<h1>Music ID is not present</h1>"
+                else:
+                    update_query = f'''
+                            UPDATE music 
+                            SET title='{title}', album_name='{album_name}',
+                            genre='{genre}', updated_at=now()
+                            WHERE id={id};
+                            '''
+                    print("update_query: ")
+                    print(update_query)
+                    cursor.execute(update_query)
+                    mysql.connection.commit()
+                    return redirect(url_for('list_artist_songs', artist_id=artist_id))
+            elif request.method == "GET":
+                cursor = create_cursor()
+                cursor.execute(f"SELECT * from music where id='{id}'")
+                music_info = cursor.fetchone()
+                if not music_info:
+                    return "<h1>Music ID is not present</h1>"
+                else:
+                    return render_template("edit_music.html", music_info=music_info)
     return redirect(url_for('home'))
 
 @app.route('/delete_music/<id>')

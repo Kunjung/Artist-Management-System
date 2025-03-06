@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <p>Adding new music for artist: {{artist_name}}</p>
+  <h4>Add new music for artist: {{artist_name}}</h4>
   <form action="{{url_for('add_music', artist_id=artist_id)}}" method="post">
     <p>
         <label>Title</label>
