@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 from MySQLdb.cursors import DictCursor
+import math
 
 PAGINATION_SIZE = 1
 
@@ -49,7 +50,12 @@ def manage_user(page=1):
             offset = PAGINATION_SIZE * (page - 1)
             cursor.execute(f"SELECT * FROM user LIMIT {PAGINATION_SIZE} OFFSET {offset}")
             userlist = cursor.fetchall()
-            return render_template("manage_user.html", username= username, userrole=userrole, userlist=userlist)
+            cursor.execute(f"SELECT count(*) as count FROM user")
+            total_user_count = cursor.fetchone()['count']
+            print("total_user_count: ", total_user_count)
+            total_page = math.ceil(total_user_count / PAGINATION_SIZE)
+            print("total_page: ", total_page)
+            return render_template("manage_user.html", username= username, userrole=userrole, userlist=userlist, total_page=total_page, current_page=page)
         else:
             return "<h1>User doesn't have permission to view this page</h1>"
     else:
