@@ -8,9 +8,9 @@
 5. Populated test values for user, artist, and music table
 6. Created basic session handling with login and logout
 7. Added signup page and created entry in user table upon signup
-8. TODO: add validation for signup
-9. TODO: add password hashing
-10. TODO: create CRUD for user, artist, and music in admin dashboard
-11. TODO: add pagination for user, artist, and music
+8. Added pagination while listing users, artists, and music in dashboard
+9. TODO: add validation for signup
+10. TODO: add password hashing
+11. TODO: create CRUD for user, artist, and music in admin dashboard
 12. TODO: CSV Import and Export for the Artist
 13. ...
