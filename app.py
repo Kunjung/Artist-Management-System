@@ -124,26 +124,40 @@ def delete_artist(id):
 
 @app.route('/list_artist_songs/<artist_id>')
 def list_artist_songs(artist_id):
-    page = request.args.get('page', 1)
-    page = int(page)
-    print("page: ", page)
-    cursor = create_cursor()
-    cursor.execute(f"SELECT * FROM artist WHERE id={artist_id}")
-    artist_info = cursor.fetchone()
-    if artist_info:
-        offset = PAGINATION_SIZE * (page - 1)
-        print("offset: ", offset)
-        artist_name = artist_info['name']
-        cursor.execute(f"SELECT * FROM music WHERE artist_id={artist_id} LIMIT {PAGINATION_SIZE} OFFSET {offset}")
-        songlist = cursor.fetchall()
-        cursor.execute(f"SELECT count(*) as count FROM music WHERE artist_id={artist_id}")
-        total_music_count = cursor.fetchone()['count']
-        print("total_music_count: ", total_music_count)
-        total_page = math.ceil(total_music_count / PAGINATION_SIZE)
-        print("total_page: ", total_page)
-        return render_template("list_artist_songs.html", artist_id=artist_id, artist_name=artist_name, songlist=songlist, total_page=total_page, current_page=page)
-    else:
-        return f"Artist not found: {artist_id}"
+    if "username" in session and "userrole" in session:
+        username = session["username"]
+        userrole = session["userrole"]
+        if userrole in ("super_admin", "artist_manager"):
+            page = request.args.get('page', 1)
+            page = int(page)
+            print("page: ", page)
+            cursor = create_cursor()
+            cursor.execute(f"SELECT * FROM artist WHERE id={artist_id}")
+            artist_info = cursor.fetchone()
+            if artist_info:
+                offset = PAGINATION_SIZE * (page - 1)
+                print("offset: ", offset)
+                artist_name = artist_info['name']
+                cursor.execute(f"SELECT * FROM music WHERE artist_id={artist_id} LIMIT {PAGINATION_SIZE} OFFSET {offset}")
+                songlist = cursor.fetchall()
+                cursor.execute(f"SELECT count(*) as count FROM music WHERE artist_id={artist_id}")
+                total_music_count = cursor.fetchone()['count']
+                print("total_music_count: ", total_music_count)
+                total_page = math.ceil(total_music_count / PAGINATION_SIZE)
+                print("total_page: ", total_page)
+                return render_template(
+                    "list_artist_songs.html", 
+                    username=username,
+                    userrole=userrole,
+                    artist_id=artist_id, 
+                    artist_name=artist_name, 
+                    songlist=songlist, 
+                    total_page=total_page, 
+                    current_page=page
+                )
+            else:
+                return f"Artist not found: {artist_id}"
+    return redirect(url_for('home'))
     
 @app.route('/edit_music/<id>')
 def edit_music(id):
