@@ -63,6 +63,56 @@ def manage_user():
     else:
         # user is not logged in, so redirect to home
         return redirect(url_for('home'))
+    
+@app.route('/add_user', methods=['GET', 'POST'])
+def add_user():
+    if "username" in session and "userrole" in session:
+        username = session["username"]
+        userrole = session["userrole"]
+        if userrole == "super_admin":
+            if request.method == "POST":
+                # add new user and redirect to manage_users dashboard
+                email = request.form["email"]
+                password = request.form["password"]
+                first_name = request.form["first_name"]
+                last_name = request.form["last_name"]
+                gender = request.form["gender"]
+                phone = request.form["phone"]
+                address = request.form["address"]
+                dob = request.form["dob"]
+                role = request.form["role"]
+
+                # TODO: validate form data is as expected
+                data = {
+                    'email': email,
+                    'password': password,
+                    'first_name': first_name,
+                    'last_name': last_name,
+                    'gender': gender,
+                    'phone': phone,
+                    'address': address,
+                    'dob': dob,
+                    'role': role
+                }
+
+                # after validation is correct, create a new entry of the data in the user table
+                cursor = create_cursor()
+                # check if email is already present or not, if present redirect back to signup with error message: 'email already present'
+                cursor.execute(f"SELECT * from user where email='{email}'")
+                user_info = cursor.fetchone()
+                if user_info:
+                    return "<h1>Email already present</h1>"
+                else:
+                    # validation completed, and email is new. so can create the new user in user table
+                    cursor.execute(f'''
+                            INSERT INTO user (first_name, last_name, email, password, phone, dob, gender, address, role, created_at, updated_at) 
+                                    values('{first_name}', '{last_name}', '{email}', '{password}', '{phone}', '{dob}', '{gender}', '{address}', '{role}', now(), now())
+                            ''')
+                    mysql.connection.commit()
+                    return redirect(url_for('manage_user'))
+            elif request.method == "GET":
+                return render_template("add_user.html")
+    return redirect(url_for('home'))
 
 @app.route('/edit_user/<id>')
 def edit_user(id):

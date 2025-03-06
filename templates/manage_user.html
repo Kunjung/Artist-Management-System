@@ -3,6 +3,7 @@
 {% block content %}
   <p>Name: {{username}}</p>
   <p>Role: {{userrole}}</p>
+  <h3><a href="{{url_for('add_user')}}">Add New User</a></h3>
   <h3>User List</h3>
   <table style="border: 1px solid black; border-style: dotted;">
     <tr>
