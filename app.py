@@ -259,13 +259,57 @@ def add_artist():
                 return render_template("add_artist.html")
     return redirect(url_for('home'))
 
-@app.route('/edit_artist/<id>')
+@app.route('/edit_artist/<id>', methods=['GET', 'POST'])
 def edit_artist(id):
     if "username" in session and "userrole" in session:
         username = session["username"]
         userrole = session["userrole"]
         if userrole == "super_admin":
-            return f"Artist Id: {id}"
+            if request.method == "POST":
+                name = request.form["name"]
+                dob = request.form["dob"]
+                gender = request.form["gender"]
+                address = request.form["address"]
+                first_release_year = request.form["first_release_year"]
+                no_of_albums_released = request.form["no_of_albums_released"]
+
+                # TODO: validate form data is as expected
+                artist_data = {
+                    'name': name,
+                    'dob': dob,
+                    'gender': gender,
+                    'address': address,
+                    'first_release_year': first_release_year,
+                    'no_of_albums_released': no_of_albums_released
+                }
+
+                cursor = create_cursor()
+                cursor.execute(f"SELECT * from artist where id='{id}'")
+                user_info = cursor.fetchone()
+                if not user_info:
+                    return "<h1>Artist ID is not present</h1>"
+                else:
+                    update_query = f'''
+                            UPDATE artist 
+                            SET name='{name}', first_release_year='{first_release_year}', no_of_albums_released='{no_of_albums_released}', 
+                            dob='{dob}', gender='{gender}', address='{address}', updated_at=now()
+                            WHERE id={id};
+                            '''
+                    print("update_query: ")
+                    print(update_query)
+                    cursor.execute(update_query)
+                    mysql.connection.commit()
+                    return redirect(url_for('manage_artist'))
+            elif request.method == "GET":
+                # get existing data of user and use that as placeholder value in the edit form
+                cursor = create_cursor()
+                # check if email is already present or not, if present redirect back to signup with error message: 'email already present'
+                cursor.execute(f"SELECT * from artist where id='{id}'")
+                artist_info = cursor.fetchone()
+                if not artist_info:
+                    return "<h1>Artist ID is not present</h1>"
+                else:
+                    return render_template("edit_artist.html", artist_info=artist_info)
     return redirect(url_for('home'))
 
 @app.route('/delete_artist/<id>')

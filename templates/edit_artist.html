@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <form action="{{url_for('edit_artist',id=artist_info['id'])}}" method="post">
+    <p>
+        <label>Name</label>
+        <input type="text" name="name" value="{{artist_info['name']}}" required>
+    </p>
+    <p>
+        <label>Address</label>
+        <input type="text" name="address" value="{{artist_info['address']}}" required>
+    </p>
+    <p>
+        <label>Gender</label>
+
+        {% if artist_info['gender'] == 'm' %}
+            <input type="radio" name="gender" value="m" checked>
+        {% else %}
+            <input type="radio" name="gender" value="m">
+        {% endif %}
+        <label>Male</label>
+
+        {% if artist_info['gender'] == 'f' %}
+            <input type="radio" name="gender" value="f" checked>
+        {% else %}
+            <input type="radio" name="gender" value="f">
+        {% endif %}
+        <label>Female</label>
+
+        {% if artist_info['gender'] == 'o' %}
+            <input type="radio" name="gender" value="o" checked>
+        {% else %}
+            <input type="radio" name="gender" value="o">
+        {% endif %}
+        <label>Other</label>
+    </p>
+    <p>
+        <label>Date of Birth</label>
+        <input type="date" name="dob" value={{artist_info['dob']}} required>
+    </p>
+    <p>
+        <label>First Release Year</label>
+        <input type="text" name="first_release_year" value="{{artist_info['first_release_year']}}" required>
+    </p>
+    <p>
+        <label>No of Albums Released</label>
+        <input type="text" name="no_of_albums_released" value="{{artist_info['no_of_albums_released']}}" required>
+    </p>
+    <p>
+        <input type="submit" value="Complete Update">
+    </p>
+  </form>
+  <br/>
+  <br/>
+  <a href="{{url_for('dashboard')}}">Return to dashboard</a>
+  <br/>
+  <a href="{{url_for('logout')}}">Logout</a>
+{% endblock %}
