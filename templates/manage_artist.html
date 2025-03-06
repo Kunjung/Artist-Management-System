@@ -45,6 +45,7 @@
       <a href="{{url_for('manage_artist')}}?page={{current_page+1}}">Next</a>
     {% endif %}
   </p>
+  <h3><a href="{{url_for('export_artist')}}">CSV Export</a> ... <a href="{{url_for('import_artist')}}">CSV Import</a></h3>
   <br/>
   <br/>
   <a href="{{url_for('dashboard')}}">Return to dashboard</a>

@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, send_file
 from flask_mysqldb import MySQL
 from MySQLdb.cursors import DictCursor
-import math
+import math, csv, os
 
 PAGINATION_SIZE = 10
+UPLOAD_FILE_PATH = os.path.join(os.getcwd(), 'static/file_uploads')
 
 app = Flask(__name__)
 
@@ -330,6 +331,69 @@ def delete_artist(id):
                 cursor.execute(delete_query)
                 mysql.connection.commit()
                 return redirect(url_for('manage_artist'))
+    return redirect(url_for('home'))
+
+@app.route('/import_artist', methods=['GET', 'POST'])
+def import_artist():
+    if "username" in session and "userrole" in session:
+        username = session["username"]
+        userrole = session["userrole"]
+        if userrole in ("super_admin", "artist_manager"):
+            if request.method == 'GET':
+                # display CSV upload page
+                return render_template("import_artist.html")
+            elif request.method == 'POST':
+                # use the file and populate artist table with insert queries
+                print("request.files: ", request.files)
+                if 'artist_file' not in request.files:
+                    return '<h1>File not uploaded</h1>'
+                uploaded_file = request.files['artist_file']
+                file_path = os.path.join(UPLOAD_FILE_PATH, uploaded_file.filename)
+                uploaded_file.save(file_path)
+                with open(file_path) as file:
+                    csv_file = csv.reader(file)
+                    print("csv imported data:")
+                    print("***" * 30)
+                    header = next(csv_file)
+                    print("header: ")
+                    print(header)
+                    cursor = create_cursor()
+                    # TODO: verify that the required headers are present in the file
+                    # e.g. header must include name, dob, gender, address, first_release_year, no_of_albums_released
+                    # header can optionally exclude id, created_at, updated_at
+                    # TODO: also verify that the data is valid before inserting to table
+                    for row in csv_file:
+                        print(row)
+                        id, name, dob, gender, address, first_release_year, no_of_albums_released, created_at, updated_at = \
+                            row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
+                        cursor.execute(f'''
+                                    INSERT INTO artist (name, dob, gender, address, first_release_year, no_of_albums_released, created_at, updated_at) 
+                                            values('{name}', '{dob}', '{gender}', '{address}', {first_release_year}, {no_of_albums_released}, now(), now())
+                                    ''')
+                        mysql.connection.commit()
+                return redirect(url_for('manage_artist'))
+            
+
+    return redirect(url_for('home'))
+
+@app.route('/export_artist')
+def export_artist():
+    if "username" in session and "userrole" in session:
+        username = session["username"]
+        userrole = session["userrole"]
+        if userrole in ("super_admin", "artist_manager"):
+            cursor = create_cursor()
+            cursor.execute('SELECT * FROM artist')
+            artists = cursor.fetchall()
+            if artists:
+                artist_keys = artists[0].keys()
+                print("artist_keys: ", artist_keys)
+                with open("artists.csv", "w", newline="") as output_file:
+                    dict_writer = csv.DictWriter(output_file, artist_keys)
+                    dict_writer.writeheader()
+                    dict_writer.writerows(artists)
+                return send_file("artists.csv", as_attachment=True, download_name="artists.csv")
+
     return redirect(url_for('home'))
 
 @app.route('/list_artist_songs/<artist_id>')
