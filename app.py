@@ -114,13 +114,65 @@ def add_user():
                 return render_template("add_user.html")
     return redirect(url_for('home'))
 
-@app.route('/edit_user/<id>')
+@app.route('/edit_user/<id>', methods=['GET', 'POST'])
 def edit_user(id):
     if "username" in session and "userrole" in session:
         username = session["username"]
         userrole = session["userrole"]
         if userrole == "super_admin":
-            return f"Userid: {id}"
+            if request.method == "POST":
+                # update existing user and redirect to manage_users dashboard
+                # first confirm that user exists in table or not
+                email = request.form["email"]
+                password = request.form["password"]
+                first_name = request.form["first_name"]
+                last_name = request.form["last_name"]
+                gender = request.form["gender"]
+                phone = request.form["phone"]
+                address = request.form["address"]
+                dob = request.form["dob"]
+                role = request.form["role"]
+
+                # TODO: validate form data is as expected
+                data = {
+                    'email': email,
+                    'password': password,
+                    'first_name': first_name,
+                    'last_name': last_name,
+                    'gender': gender,
+                    'phone': phone,
+                    'address': address,
+                    'dob': dob,
+                    'role': role
+                }
+
+                cursor = create_cursor()
+                cursor.execute(f"SELECT * from user where id='{id}'")
+                user_info = cursor.fetchone()
+                if not user_info:
+                    return "<h1>User ID is not present</h1>"
+                else:
+                    update_query = f'''
+                            UPDATE user 
+                            SET first_name='{first_name}', last_name='{last_name}', email='{email}', password='{password}', phone='{phone}', 
+                            dob='{dob}', gender='{gender}', address='{address}', role='{role}', updated_at=now()
+                            WHERE id={id};
+                            '''
+                    print("update_query: ")
+                    print(update_query)
+                    cursor.execute(update_query)
+                    mysql.connection.commit()
+                    return redirect(url_for('manage_user'))
+            elif request.method == "GET":
+                # get existing data of user and use that as placeholder value in the edit form
+                cursor = create_cursor()
+                # check if email is already present or not, if present redirect back to signup with error message: 'email already present'
+                cursor.execute(f"SELECT * from user where id='{id}'")
+                update_user_info = cursor.fetchone()
+                if not update_user_info:
+                    return "<h1>User ID is not present</h1>"
+                else:
+                    return render_template("edit_user.html", update_user_info=update_user_info)
     return redirect(url_for('home'))
 
 @app.route('/delete_user/<id>')
