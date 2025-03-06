@@ -3,7 +3,7 @@ from flask_mysqldb import MySQL
 from MySQLdb.cursors import DictCursor
 import math
 
-PAGINATION_SIZE = 1
+PAGINATION_SIZE = 10
 
 app = Flask(__name__)
 
@@ -181,7 +181,18 @@ def delete_user(id):
         username = session["username"]
         userrole = session["userrole"]
         if userrole == "super_admin":
-            return f"Userid: {id}"
+            cursor = create_cursor()
+            cursor.execute(f"SELECT * from user where id='{id}'")
+            user_info = cursor.fetchone()
+            if not user_info:
+                return "<h1>User ID is not present</h1>"
+            else:
+                delete_query = f"DELETE FROM user WHERE id={id}"
+                print("delete_query: ")
+                print(delete_query)
+                cursor.execute(delete_query)
+                mysql.connection.commit()
+                return redirect(url_for('manage_user'))
     return redirect(url_for('home'))
 
 @app.route('/manage_artist')
