@@ -320,8 +320,8 @@ def delete_artist(id):
         if userrole == "super_admin":
             cursor = create_cursor()
             cursor.execute(f"SELECT * from artist where id='{id}'")
-            user_info = cursor.fetchone()
-            if not user_info:
+            artist_info = cursor.fetchone()
+            if not artist_info:
                 return "<h1>Artist ID is not present</h1>"
             else:
                 delete_query = f"DELETE FROM artist WHERE id={id}"
@@ -410,7 +410,7 @@ def edit_music(id):
     if "username" in session and "userrole" in session:
         username = session["username"]
         userrole = session["userrole"]
-        if userrole == "super_admin":
+        if userrole in ("super_admin", "artist_manager", "artist"):
             if request.method == "POST":
                 cursor = create_cursor()
                 cursor.execute(f"SELECT artist_id from music where id={id}")
@@ -458,8 +458,19 @@ def delete_music(id):
     if "username" in session and "userrole" in session:
         username = session["username"]
         userrole = session["userrole"]
-        if userrole == "super_admin":
-            return f"Music Id: {id}"
+        if userrole in ("super_admin", "artist_manager", "artist"):
+            cursor = create_cursor()
+            cursor.execute(f"SELECT * from music where id='{id}'")
+            music_info = cursor.fetchone()
+            if not music_info:
+                return "<h1>Music ID is not present</h1>"
+            else:
+                delete_query = f"DELETE FROM music WHERE id={id}"
+                print("delete_query: ")
+                print(delete_query)
+                cursor.execute(delete_query)
+                mysql.connection.commit()
+                return redirect(url_for('list_artist_songs',artist_id=music_info['artist_id']))
     return redirect(url_for('home'))
 
 @app.route('/login', methods=["POST"])
