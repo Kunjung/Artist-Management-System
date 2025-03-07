@@ -526,7 +526,7 @@ def edit_music(id):
                 if not music_info:
                     return "<h1>Music ID is not present</h1>"
                 else:
-                    return render_template("edit_music.html", music_info=music_info, is_user_logged_in=True)
+                    return render_template("edit_music.html", music_info=music_info, username=username, userrole=userrole, is_user_logged_in=True)
     return redirect(url_for('home'))
 
 @app.route('/delete_music/<id>')
