@@ -12,9 +12,20 @@
 9. Added functionality to add new user from the admin dashboard
 10. Added functionality to update existing user from the admin dashboard
 11. Added functionality to delete existing user from the admin dashboard
-12. CSV import and export added for artist
-13. TODO: add validation for signup
-14. TODO: add password hashing
-15. TODO: create CRUD for user, artist, and music in admin dashboard
-16. TODO: Add validation check while importing data for artist from CSV
-17. ...
+12. Added functionality to add new artist from the admin dashboard
+13. Added functionality to update existing artist from the admin dashboard
+14. Added functionality to delete existing artist from the admin dashboard
+15. Added functionality to add new music from the admin dashboard
+16. Added functionality to update existing music from the admin dashboard
+17. Added functionality to delete existing music from the admin dashboard
+18. CSV import and export added in admin dashboard
+19. TODO: Add validation check while importing data for artist from CSV
+20. TODO: add validation for signup
+21. TODO: add password hashing
+22. TODO: handle ' in update form for /edit_music. might need to check for other apis as well
+23. TODO: remove artist_id in /list_artist_songs
+24. TODO: validation: check if phone number is correct, check if email is correct
+25. TODO: manage role based api access
+26. TODO: refactoring
+27. TODO: make UI more user friendly
+28. TODO: SQL injection prevention
