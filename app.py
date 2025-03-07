@@ -250,10 +250,10 @@ def add_artist():
                 # after validation is correct, create a new entry of the data in the user table
                 cursor = create_cursor()
                 # validation completed, and email is new. so can create the new user in user table
-                cursor.execute(f'''
+                cursor.execute('''
                         INSERT INTO artist (name, dob, gender, address, first_release_year, no_of_albums_released, created_at, updated_at) 
-                            values('{name}', '{dob}', '{gender}', '{address}', {first_release_year}, {no_of_albums_released}, now(), now())
-                        ''')
+                            values(%(name)s, %(dob)s, %(gender)s, %(address)s, %(first_release_year)s, %(no_of_albums_released)s, now(), now())
+                        ''', artist_data)
                 mysql.connection.commit()
                 return redirect(url_for('manage_artist'))
             elif request.method == "GET":
