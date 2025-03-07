@@ -1,11 +1,23 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <form action="{{url_for('login')}}" method="post">
-    <input type="text" name="email" id="email" placeholder="Email"/>
-    <input type="password" name="password" id="password" placeholder="Password"/>
-    <input type="submit" value="Log In">
-  </form>
-  <br/>
-  <a href="{{url_for('signup')}}">Signup</a>
+  <div class="row">
+    <div class="d-flex gap-3 justify-content-center">
+      <form action="{{url_for('login')}}" method="post">
+        <div class="mb-2">
+          <label>Email:<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label><input class="mr-4" type="text" name="email" id="email" placeholder="Email"/>
+        </div>
+        <div class="mb-2">
+          <label>Password:<span>&nbsp;&nbsp;</span></label><input class="mr-4" type="password" name="password" id="password" placeholder="Password"/>
+        </div>
+        <input type="submit" value="Log In">
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="d-flex justify-content-center">
+      <div><a href="{{url_for('signup')}}">Signup</a></div>
+    </div>
+  </div>
+  
 {% endblock %}
