@@ -6,13 +6,20 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/static/bootstrap.min.css">
         <link rel="stylesheet" href="/static/styles.css">
+        <script src="/static/bootstrap.min.js"></script>
     </head>
     <title>
         Artist Management System
     </title>
     <body>
-        <h1>Artist Management System</h1>
-        {% block content %}{% endblock %}
+        <div class="jumbotron text-center">
+            <h1>Artist Management System</h1>
+            <p>A simple admin panel</p> 
+        </div>
+        <div class="container">            
+            {% block content %}{% endblock %}
+        </div>
     </body>
 </html>
