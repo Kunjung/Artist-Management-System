@@ -291,20 +291,12 @@ def edit_artist(id):
                 if not user_info:
                     return "<h1>Artist ID is not present</h1>"
                 else:
-                    # update_query = f'''
-                    #         UPDATE artist 
-                    #         SET name='{name}', first_release_year='{first_release_year}', no_of_albums_released='{no_of_albums_released}', 
-                    #         dob='{dob}', gender='{gender}', address='{address}', updated_at=now()
-                    #         WHERE id={id};
-                    #         '''
                     update_query = '''
                             UPDATE artist 
                             SET name=%(name)s, first_release_year=%(first_release_year)s, no_of_albums_released=%(no_of_albums_released)s, 
                             dob=%(dob)s, gender=%(gender)s, address=%(address)s, updated_at=now()
                             WHERE id=%(id)s;
                             '''
-                    print("update_query: ")
-                    print(update_query)
                     cursor.execute(update_query, artist_data)
                     mysql.connection.commit()
                     return redirect(url_for('manage_artist'))
