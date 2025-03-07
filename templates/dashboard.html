@@ -4,9 +4,18 @@
   <p>Name: {{username}}</p>
   <p>Role: {{userrole}}</p>
   <h3>
-    <a href="{{url_for('manage_user')}}">Manage User</a>
-    ......
-    <a href="{{url_for('manage_artist')}}">Manage Artist</a>
+    {% if userrole == 'super_admin' %}
+      <a href="{{url_for('manage_user')}}">Manage User</a>
+      ......
+      <a href="{{url_for('manage_artist')}}">Manage Artist</a>
+    {% endif %}
+    {% if userrole == 'artist_manager' %}
+      <a href="{{url_for('manage_artist')}}">Manage Artist</a>
+    {% endif %}
+    {% if userrole == 'artist' %}
+      <!-- display current artist's songs -->
+      <a>Manage Song</a>
+    {% endif %}
   </h3>
   <br/>
   <br/>

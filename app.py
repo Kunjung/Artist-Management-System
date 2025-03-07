@@ -227,7 +227,7 @@ def add_artist():
     if "username" in session and "userrole" in session:
         username = session["username"]
         userrole = session["userrole"]
-        if userrole == "super_admin":
+        if userrole in ("super_admin", "artist_manager"):
             if request.method == "POST":
                 # add new user and redirect to manage_users dashboard
                 name = request.form["name"]
@@ -265,7 +265,7 @@ def edit_artist(id):
     if "username" in session and "userrole" in session:
         username = session["username"]
         userrole = session["userrole"]
-        if userrole == "super_admin":
+        if userrole in ("super_admin", "artist_manager"):
             if request.method == "POST":
                 name = request.form["name"]
                 dob = request.form["dob"]
@@ -318,7 +318,7 @@ def delete_artist(id):
     if "username" in session and "userrole" in session:
         username = session["username"]
         userrole = session["userrole"]
-        if userrole == "super_admin":
+        if userrole in ("super_admin", "artist_manager"):
             cursor = create_cursor()
             cursor.execute(f"SELECT * from artist where id='{id}'")
             artist_info = cursor.fetchone()
