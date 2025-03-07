@@ -366,10 +366,18 @@ def import_artist():
                         print(row)
                         id, name, dob, gender, address, first_release_year, no_of_albums_released, created_at, updated_at = \
                             row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
-                        cursor.execute(f'''
+                        params = {
+                            'name': name,
+                            'dob': dob,
+                            'gender': gender,
+                            'address': address,
+                            'first_release_year': first_release_year,
+                            'no_of_albums_released': no_of_albums_released
+                        }
+                        cursor.execute('''
                                     INSERT INTO artist (name, dob, gender, address, first_release_year, no_of_albums_released, created_at, updated_at) 
-                                            values('{name}', '{dob}', '{gender}', '{address}', {first_release_year}, {no_of_albums_released}, now(), now())
-                                    ''')
+                                            values(%(name)s, %(dob)s, %(gender)s, %(address)s, %(first_release_year)s, %(no_of_albums_released)s, now(), now())
+                                    ''', params)
                         mysql.connection.commit()
                 return redirect(url_for('manage_artist'))
             
