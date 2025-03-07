@@ -546,7 +546,7 @@ def login():
     password = request.form["password"]
     # check if username and password is present in database
     cursor = create_cursor()
-    cursor.execute("SELECT * FROM user WHERE email =%s LIMIT 1", (email,))
+    cursor.execute("SELECT * FROM user WHERE email = %s LIMIT 1", (email,))
     user_info = cursor.fetchone()
     if user_info:
         # user is present
@@ -594,17 +594,21 @@ def signup():
         # after validation is correct, create a new entry of the data in the user table
         cursor = create_cursor()
         # check if email is already present or not, if present redirect back to signup with error message: 'email already present'
-        cursor.execute(f"SELECT * from user where email='{email}'")
+        cursor.execute("SELECT * FROM user WHERE email = %s LIMIT 1", (email,))
         user_info = cursor.fetchone()
         if user_info:
             return "<h1>Email already present</h1>"
             return render_template("signup.html") # TODO: include error that email is already present
         else:
             # validation completed, and email is new. so can create the new user in user table
-            cursor.execute(f'''
+            # cursor.execute(f'''
+            #            INSERT INTO user (first_name, last_name, email, password, phone, dob, gender, address, role, created_at, updated_at) 
+            #                 values('{first_name}', '{last_name}', '{email}', '{password}', '{phone}', '{dob}', '{gender}', '{address}', '{role}', now(), now())
+            #            ''')
+            cursor.execute('''
                        INSERT INTO user (first_name, last_name, email, password, phone, dob, gender, address, role, created_at, updated_at) 
-                            values('{first_name}', '{last_name}', '{email}', '{password}', '{phone}', '{dob}', '{gender}', '{address}', '{role}', now(), now())
-                       ''')
+                            values(%(first_name)s, %(last_name)s, %(email)s, %(password)s, %(phone)s, %(dob)s, %(gender)s, %(address)s, %(role)s, now(), now())
+                       ''', data)
             mysql.connection.commit()
             return redirect(url_for('home'))
 
