@@ -455,15 +455,15 @@ def add_music(artist_id):
                 # after validation is correct, create a new entry of the data in the user table
                 cursor = create_cursor()
                 # validation completed, and email is new. so can create the new user in user table
-                cursor.execute(f'''
+                cursor.execute('''
                         INSERT INTO music (artist_id, title, album_name, genre, created_at, updated_at) 
-                            values({artist_id}, '{title}', '{album_name}', '{genre}', now(), now())
-                        ''')
+                            values(%(artist_id)s, %(title)s, %(album_name)s, %(genre)s, now(), now())
+                        ''', music_data)
                 mysql.connection.commit()
                 return redirect(url_for('list_artist_songs', artist_id=artist_id))
             elif request.method == "GET":
                 cursor = create_cursor()
-                cursor.execute(f"SELECT * FROM artist where id={artist_id} LIMIT 1")
+                cursor.execute("SELECT * FROM artist where id=%s LIMIT 1", (artist_id,))
                 artist_info = cursor.fetchone()
                 artist_name = artist_info['name']
                 return render_template("add_music.html", artist_id=artist_id, artist_name=artist_name)
@@ -477,7 +477,7 @@ def edit_music(id):
         if userrole in ("super_admin", "artist_manager", "artist"):
             if request.method == "POST":
                 cursor = create_cursor()
-                cursor.execute(f"SELECT artist_id from music where id={id}")
+                cursor.execute("SELECT artist_id from music where id=%s", (id,))
                 artist_id = cursor.fetchone()['artist_id']
                 title = request.form["title"]
                 album_name = request.form["album_name"]
@@ -491,7 +491,7 @@ def edit_music(id):
                 }
 
                 cursor = create_cursor()
-                cursor.execute(f"SELECT * from music where id={id}")
+                cursor.execute("SELECT * from music where id=%s", (id,))
                 music_info = cursor.fetchone()
                 if not music_info:
                     return "<h1>Music ID is not present</h1>"
