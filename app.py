@@ -496,15 +496,19 @@ def edit_music(id):
                 if not music_info:
                     return "<h1>Music ID is not present</h1>"
                 else:
-                    update_query = f'''
+                    parameters = {
+                        'title': title,
+                        'album_name': album_name,
+                        'genre': genre,
+                        'id': id
+                    }
+                    parameterized_update_query = '''
                             UPDATE music 
-                            SET title='{title}', album_name='{album_name}',
-                            genre='{genre}', updated_at=now()
-                            WHERE id={id};
+                            SET title=%(title)s, album_name=%(album_name)s,
+                            genre=%(genre)s, updated_at=now()
+                            WHERE id=%(id)s;
                             '''
-                    print("update_query: ")
-                    print(update_query)
-                    cursor.execute(update_query)
+                    cursor.execute(parameterized_update_query, parameters)
                     mysql.connection.commit()
                     return redirect(url_for('list_artist_songs', artist_id=artist_id))
             elif request.method == "GET":
