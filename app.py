@@ -513,7 +513,7 @@ def edit_music(id):
                     return redirect(url_for('list_artist_songs', artist_id=artist_id))
             elif request.method == "GET":
                 cursor = create_cursor()
-                cursor.execute(f"SELECT * from music where id='{id}'")
+                cursor.execute("SELECT * from music where id=%s", (id,))
                 music_info = cursor.fetchone()
                 if not music_info:
                     return "<h1>Music ID is not present</h1>"
@@ -528,15 +528,13 @@ def delete_music(id):
         userrole = session["userrole"]
         if userrole in ("super_admin", "artist_manager", "artist"):
             cursor = create_cursor()
-            cursor.execute(f"SELECT * from music where id='{id}'")
+            cursor.execute("SELECT * from music where id=%s", (id,))
             music_info = cursor.fetchone()
             if not music_info:
                 return "<h1>Music ID is not present</h1>"
             else:
-                delete_query = f"DELETE FROM music WHERE id={id}"
-                print("delete_query: ")
-                print(delete_query)
-                cursor.execute(delete_query)
+                delete_query = "DELETE FROM music WHERE id=%s"
+                cursor.execute(delete_query, (id,))
                 mysql.connection.commit()
                 return redirect(url_for('list_artist_songs',artist_id=music_info['artist_id']))
     return redirect(url_for('home'))
