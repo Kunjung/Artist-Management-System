@@ -546,7 +546,7 @@ def login():
     password = request.form["password"]
     # check if username and password is present in database
     cursor = create_cursor()
-    cursor.execute(f"SELECT * FROM user WHERE email ='{email}' LIMIT 1")
+    cursor.execute("SELECT * FROM user WHERE email =%s LIMIT 1", (email,))
     user_info = cursor.fetchone()
     if user_info:
         # user is present
