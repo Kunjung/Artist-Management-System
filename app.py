@@ -396,7 +396,7 @@ def export_artist():
 
     return redirect(url_for('home'))
 
-@app.route('/list_artist_songs/<artist_id>')
+@app.route('/list_artist_songs/<int:artist_id>')
 def list_artist_songs(artist_id):
     if "username" in session and "userrole" in session:
         username = session["username"]
@@ -406,15 +406,16 @@ def list_artist_songs(artist_id):
             page = int(page)
             print("page: ", page)
             cursor = create_cursor()
-            cursor.execute(f"SELECT * FROM artist WHERE id={artist_id}")
+            cursor.execute("SELECT * FROM artist WHERE id=%s", (artist_id,))
             artist_info = cursor.fetchone()
             if artist_info:
                 offset = PAGINATION_SIZE * (page - 1)
                 print("offset: ", offset)
                 artist_name = artist_info['name']
-                cursor.execute(f"SELECT * FROM music WHERE artist_id={artist_id} LIMIT {PAGINATION_SIZE} OFFSET {offset}")
+                cursor.execute("SELECT * FROM music WHERE artist_id=%s LIMIT %s OFFSET %s",
+                               (artist_id, PAGINATION_SIZE, offset))
                 songlist = cursor.fetchall()
-                cursor.execute(f"SELECT count(*) as count FROM music WHERE artist_id={artist_id}")
+                cursor.execute("SELECT count(*) as count FROM music WHERE artist_id=%s", (artist_id,))
                 total_music_count = cursor.fetchone()['count']
                 print("total_music_count: ", total_music_count)
                 total_page = math.ceil(total_music_count / PAGINATION_SIZE)
