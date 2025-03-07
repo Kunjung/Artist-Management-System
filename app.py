@@ -474,7 +474,7 @@ def add_music(artist_id):
                 cursor.execute("SELECT * FROM artist where id=%s LIMIT 1", (artist_id,))
                 artist_info = cursor.fetchone()
                 artist_name = artist_info['name']
-                return render_template("add_music.html", artist_id=artist_id, artist_name=artist_name, is_user_logged_in=True)
+                return render_template("add_music.html", username=username, userrole=userrole, artist_id=artist_id, artist_name=artist_name, is_user_logged_in=True)
     return redirect(url_for('home'))
 
 @app.route('/edit_music/<int:id>', methods=['GET', 'POST'])
