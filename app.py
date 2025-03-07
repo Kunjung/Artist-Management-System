@@ -27,14 +27,14 @@ def home():
     if "username" in session and "userrole" in session:
         # user is logged in. so redirect to dashboard
         return redirect(url_for("dashboard"))
-    return render_template("index.html")
+    return render_template("index.html", is_user_logged_in=False)
 
 @app.route('/dashboard')
 def dashboard():
     if "username" in session and "userrole" in session:
         username = session["username"]
         userrole = session["userrole"]
-        return render_template("dashboard.html", username= username, userrole=userrole)
+        return render_template("dashboard.html", username= username, userrole=userrole, is_user_logged_in=True)
     else:
         # user is not logged in, so redirect to home
         return redirect(url_for('home'))
@@ -58,7 +58,7 @@ def manage_user():
             print("total_user_count: ", total_user_count)
             total_page = math.ceil(total_user_count / PAGINATION_SIZE)
             print("total_page: ", total_page)
-            return render_template("manage_user.html", username= username, userrole=userrole, userlist=userlist, total_page=total_page, current_page=page)
+            return render_template("manage_user.html", username= username, userrole=userrole, userlist=userlist, total_page=total_page, current_page=page, is_user_logged_in=True)
         else:
             return "<h1>User doesn't have permission to view this page</h1>"
     else:
@@ -112,7 +112,7 @@ def add_user():
                     mysql.connection.commit()
                     return redirect(url_for('manage_user'))
             elif request.method == "GET":
-                return render_template("add_user.html")
+                return render_template("add_user.html", is_user_logged_in=True, username=username, userrole=userrole)
     return redirect(url_for('home'))
 
 @app.route('/edit_user/<int:id>', methods=['GET', 'POST'])
@@ -172,7 +172,7 @@ def edit_user(id):
                 if not update_user_info:
                     return "<h1>User ID is not present</h1>"
                 else:
-                    return render_template("edit_user.html", update_user_info=update_user_info)
+                    return render_template("edit_user.html", update_user_info=update_user_info, username=username, userrole=userrole, is_user_logged_in=True)
     return redirect(url_for('home'))
 
 @app.route('/delete_user/<id>')
@@ -214,7 +214,7 @@ def manage_artist():
             print("total_artist_count: ", total_artist_count)
             total_page = math.ceil(total_artist_count / PAGINATION_SIZE)
             print("total_page: ", total_page)
-            return render_template("manage_artist.html", username= username, userrole=userrole, artistlist=artistlist, total_page=total_page, current_page=page)
+            return render_template("manage_artist.html", username= username, userrole=userrole, artistlist=artistlist, total_page=total_page, current_page=page, is_user_logged_in=True)
         else:
             return "<h1>User doesn't have permission to view this page</h1>"
     else:
@@ -256,7 +256,7 @@ def add_artist():
                 mysql.connection.commit()
                 return redirect(url_for('manage_artist'))
             elif request.method == "GET":
-                return render_template("add_artist.html")
+                return render_template("add_artist.html", username=username, userrole=userrole, is_user_logged_in=True)
     return redirect(url_for('home'))
 
 @app.route('/edit_artist/<int:id>', methods=['GET', 'POST'])
@@ -308,7 +308,7 @@ def edit_artist(id):
                 if not artist_info:
                     return "<h1>Artist ID is not present</h1>"
                 else:
-                    return render_template("edit_artist.html", artist_info=artist_info)
+                    return render_template("edit_artist.html", artist_info=artist_info, username=username, userrole=userrole, is_user_logged_in=True)
     return redirect(url_for('home'))
 
 @app.route('/delete_artist/<int:id>')
@@ -339,7 +339,7 @@ def import_artist():
         if userrole in ("super_admin", "artist_manager"):
             if request.method == 'GET':
                 # display CSV upload page
-                return render_template("import_artist.html")
+                return render_template("import_artist.html", username=username, userrole=userrole, is_user_logged_in=True)
             elif request.method == 'POST':
                 # use the file and populate artist table with insert queries
                 print("request.files: ", request.files)
@@ -434,7 +434,8 @@ def list_artist_songs(artist_id):
                     artist_name=artist_name, 
                     songlist=songlist, 
                     total_page=total_page, 
-                    current_page=page
+                    current_page=page,
+                    is_user_logged_in=True
                 )
             else:
                 return f"Artist not found: {artist_id}"
@@ -473,7 +474,7 @@ def add_music(artist_id):
                 cursor.execute("SELECT * FROM artist where id=%s LIMIT 1", (artist_id,))
                 artist_info = cursor.fetchone()
                 artist_name = artist_info['name']
-                return render_template("add_music.html", artist_id=artist_id, artist_name=artist_name)
+                return render_template("add_music.html", artist_id=artist_id, artist_name=artist_name, is_user_logged_in=True)
     return redirect(url_for('home'))
 
 @app.route('/edit_music/<int:id>', methods=['GET', 'POST'])
@@ -525,7 +526,7 @@ def edit_music(id):
                 if not music_info:
                     return "<h1>Music ID is not present</h1>"
                 else:
-                    return render_template("edit_music.html", music_info=music_info)
+                    return render_template("edit_music.html", music_info=music_info, is_user_logged_in=True)
     return redirect(url_for('home'))
 
 @app.route('/delete_music/<id>')
@@ -572,7 +573,7 @@ def login():
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
     if request.method == 'GET':
-        return render_template("signup.html")
+        return render_template("signup.html", is_user_logged_in=False)
     else:
         email = request.form["email"]
         password = request.form["password"]

@@ -18,7 +18,22 @@
             <h1>Artist Management System</h1>
             <p>A simple admin panel</p> 
         </div>
-        <div class="container">            
+        <div class="container">
+            {% if is_user_logged_in == True %}
+              <div class="row">
+                <div class="col-sm-4">
+                    <p>Name: {{username}}</p>
+                    <p>Role: {{userrole}}</p>
+                    </div>
+                    <div class="col-sm-4 d-flex justify-content-center">
+                    <p><a href="{{url_for('dashboard')}}">Return to dashboard</a></p>
+                    </div>
+                    <div class="col-sm-4 text-end">
+                    <p><a href="{{url_for('logout')}}">Logout</a></p>
+                </div>
+                <hr class="border-bottom border-3 border-dark">
+            </div>
+            {% endif %}
             {% block content %}{% endblock %}
         </div>
     </body>

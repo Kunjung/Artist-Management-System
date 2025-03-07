@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <p>Name: {{username}}</p>
-  <p>Role: {{userrole}}</p>
   <div class="row">
     {% if userrole == 'super_admin' %}
       <!--
