@@ -313,22 +313,22 @@ def edit_artist(id):
                     return render_template("edit_artist.html", artist_info=artist_info)
     return redirect(url_for('home'))
 
-@app.route('/delete_artist/<id>')
+@app.route('/delete_artist/<int:id>')
 def delete_artist(id):
     if "username" in session and "userrole" in session:
         username = session["username"]
         userrole = session["userrole"]
         if userrole in ("super_admin", "artist_manager"):
             cursor = create_cursor()
-            cursor.execute(f"SELECT * from artist where id='{id}'")
+            cursor.execute("SELECT * from artist where id=%s", (id,))
             artist_info = cursor.fetchone()
             if not artist_info:
                 return "<h1>Artist ID is not present</h1>"
             else:
-                delete_query = f"DELETE FROM artist WHERE id={id}"
+                delete_query = "DELETE FROM artist WHERE id=%s"
                 print("delete_query: ")
                 print(delete_query)
-                cursor.execute(delete_query)
+                cursor.execute(delete_query, (id,))
                 mysql.connection.commit()
                 return redirect(url_for('manage_artist'))
     return redirect(url_for('home'))
