@@ -260,7 +260,7 @@ def add_artist():
                 return render_template("add_artist.html")
     return redirect(url_for('home'))
 
-@app.route('/edit_artist/<id>', methods=['GET', 'POST'])
+@app.route('/edit_artist/<int:id>', methods=['GET', 'POST'])
 def edit_artist(id):
     if "username" in session and "userrole" in session:
         username = session["username"]
@@ -281,31 +281,38 @@ def edit_artist(id):
                     'gender': gender,
                     'address': address,
                     'first_release_year': first_release_year,
-                    'no_of_albums_released': no_of_albums_released
+                    'no_of_albums_released': no_of_albums_released,
+                    'id': id
                 }
 
                 cursor = create_cursor()
-                cursor.execute(f"SELECT * from artist where id='{id}'")
+                cursor.execute("SELECT * from artist where id=%s", (id,))
                 user_info = cursor.fetchone()
                 if not user_info:
                     return "<h1>Artist ID is not present</h1>"
                 else:
-                    update_query = f'''
+                    # update_query = f'''
+                    #         UPDATE artist 
+                    #         SET name='{name}', first_release_year='{first_release_year}', no_of_albums_released='{no_of_albums_released}', 
+                    #         dob='{dob}', gender='{gender}', address='{address}', updated_at=now()
+                    #         WHERE id={id};
+                    #         '''
+                    update_query = '''
                             UPDATE artist 
-                            SET name='{name}', first_release_year='{first_release_year}', no_of_albums_released='{no_of_albums_released}', 
-                            dob='{dob}', gender='{gender}', address='{address}', updated_at=now()
-                            WHERE id={id};
+                            SET name=%(name)s, first_release_year=%(first_release_year)s, no_of_albums_released=%(no_of_albums_released)s, 
+                            dob=%(dob)s, gender=%(gender)s, address=%(address)s, updated_at=now()
+                            WHERE id=%(id)s;
                             '''
                     print("update_query: ")
                     print(update_query)
-                    cursor.execute(update_query)
+                    cursor.execute(update_query, artist_data)
                     mysql.connection.commit()
                     return redirect(url_for('manage_artist'))
             elif request.method == "GET":
                 # get existing data of user and use that as placeholder value in the edit form
                 cursor = create_cursor()
                 # check if email is already present or not, if present redirect back to signup with error message: 'email already present'
-                cursor.execute(f"SELECT * from artist where id='{id}'")
+                cursor.execute("SELECT * from artist where id=%s", (id,))
                 artist_info = cursor.fetchone()
                 if not artist_info:
                     return "<h1>Artist ID is not present</h1>"
