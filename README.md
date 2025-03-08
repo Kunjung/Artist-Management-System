@@ -29,3 +29,4 @@
 26. TODO: refactoring
 27. Made UI more user friendly with bootstrap
 28. TODO: remove password in /list_artist_songs
+29. Deployed a live demo version
