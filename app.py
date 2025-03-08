@@ -93,7 +93,7 @@ def add_user():
                 # TODO: validate form data is as expected
                 user_data = {
                     'email': email,
-                    'password': password,
+                    'password': generate_hash_password(password),
                     'first_name': first_name,
                     'last_name': last_name,
                     'gender': gender,
@@ -144,7 +144,7 @@ def edit_user(id):
                 # TODO: validate form data is as expected
                 user_data = {
                     'email': email,
-                    'password': password,
+                    'password': generate_hash_password(password),
                     'first_name': first_name,
                     'last_name': last_name,
                     'gender': gender,
