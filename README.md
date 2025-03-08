@@ -28,3 +28,4 @@
 25. TODO: manage role based api access
 26. TODO: refactoring
 27. TODO: make UI more user friendly
+28. TODO: remove password in /list_artist_songs

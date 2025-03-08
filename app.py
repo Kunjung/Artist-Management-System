@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, send_file
 from flask_mysqldb import MySQL
 from MySQLdb.cursors import DictCursor
-import math, csv, os
+import math, csv, os, hashlib
 
 PAGINATION_SIZE = 10
 UPLOAD_FILE_PATH = os.path.join(os.getcwd(), 'static/file_uploads')
@@ -21,6 +21,13 @@ mysql = MySQL(app)
 def create_cursor():
     return mysql.connection.cursor(DictCursor)
 
+def generate_hash_password(password):
+    h = hashlib.md5(password.encode())
+    return h.hexdigest()
+
+def verify_hash_password(password, db_hashed_password):
+    h = hashlib.md5(password.encode())
+    return h.hexdigest() == db_hashed_password
 
 @app.route('/')
 def home():
@@ -559,7 +566,7 @@ def login():
         # user is present
         # check if password matches
         db_password = user_info["password"]
-        if password == db_password:
+        if verify_hash_password(password, db_password) == True:
             # return "<h1>Password Matched</h1>"
             session["username"] = user_info["first_name"] + " " + user_info["last_name"]
             session["userrole"] = user_info["role"]
@@ -588,7 +595,7 @@ def signup():
         # TODO: validate form data is as expected
         data = {
             'email': email,
-            'password': password,
+            'password': generate_hash_password(password),
             'first_name': first_name,
             'last_name': last_name,
             'gender': gender,
