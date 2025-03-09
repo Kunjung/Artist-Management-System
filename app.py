@@ -36,16 +36,18 @@ def is_field_more_than_max_length(field, max_length):
     return False
 
 def validate_user_data(user_data):
-    if 'email' in user_data:
-        # validate email
-        email = user_data['email']
-        if not re.match(r'^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$', email):
-            return False, {'email': 'Email is invalid. Should be of the format test@email.com'}
     # check if any empty value is passed or not
     for field in user_data.keys():
         field_data = user_data[field]
         if len(str(field_data)) == 0:
             return False, {field: f'{field} is empty'}
+    
+    if 'email' in user_data:
+        # validate email
+        email = user_data['email']
+        if not re.match(r'^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$', email):
+            return False, {'email': 'Email is invalid. Should be of the format test@email.com'}
+    
     if 'first_name' in user_data:
         if is_field_more_than_max_length(user_data['first_name'], 255):
             return False, {'first_name': 'exceeds max length 255'}
@@ -68,38 +70,40 @@ def validate_user_data(user_data):
     return True, {}
 
 def validate_artist_data(artist_data):
-    if 'first_release_year' in artist_data:
-        first_release_year = str(artist_data['first_release_year'])
-        if not re.match(r'^[0-9]+$', first_release_year):
-            return False
-    if 'no_of_albums_released' in artist_data:
-        no_of_albums_released = str(artist_data['no_of_albums_released'])
-        if not re.match(r'^[0-9]+$', no_of_albums_released):
-            return False
-    if 'first_release_year' in artist_data:
-        first_release_year = str(artist_data['first_release_year'])
-        # check for 4 digit number starting with either 1 or 2
-        if not re.match(r'[12]\d{3}', first_release_year):
-            return False
-        current_year = datetime.now().year
-        if int(first_release_year) > current_year:
-            return False
     # check if any empty value is passed or not
     for field in artist_data.keys():
         field_data = artist_data[field]
         if len(str(field_data)) == 0:
-            return False
+            return False, {field: f'{field} is empty'}
+    
+    if 'first_release_year' in artist_data:
+        first_release_year = str(artist_data['first_release_year'])
+        if not re.match(r'^[0-9]+$', first_release_year):
+            return False, {'first_release_year': 'Non-numeric characters present'}
+    if 'no_of_albums_released' in artist_data:
+        no_of_albums_released = str(artist_data['no_of_albums_released'])
+        if not re.match(r'^[0-9]+$', no_of_albums_released):
+            return False, {'no_of_albums_released': 'Non-numeric characters present'}
+    if 'first_release_year' in artist_data:
+        first_release_year = str(artist_data['first_release_year'])
+        # check for 4 digit number starting with either 1 or 2
+        if not re.match(r'[12]\d{3}', first_release_year):
+            return False, {'first_release_year': 'Should be between 1000 and 2999'}
+        current_year = datetime.now().year
+        if int(first_release_year) > current_year:
+            return False, {'first_release_year': f'Should not exceed current year {current_year}'}
+    
     if 'name' in artist_data:
         if is_field_more_than_max_length(artist_data['name'], 255):
-            return False
+            return False, {'name': 'exceeds max length 255'}
     if 'address' in artist_data:
         if is_field_more_than_max_length(artist_data['address'], 255):
-            return False
+            return False, {'address': 'exceeds max length 255'}
     if 'gender' in artist_data:
         gender = artist_data['gender']
         if gender not in ('m', 'f', 'o'):
-            return False
-    return True
+            return False, {'gender': 'Allowed values m, f, o'}
+    return True, {}
 
 def validate_music_data(music_data):
     # check if any empty value is passed or not
@@ -357,8 +361,9 @@ def add_artist():
                     'no_of_albums_released': no_of_albums_released
                 }
 
-                if not validate_artist_data(artist_data):
-                    return '<h1>Artist data invalid</h1>'
+                is_valid, errors = validate_artist_data(artist_data)
+                if not is_valid:
+                    return render_template("add_artist.html", username=username, userrole=userrole, is_user_logged_in=True, artist_info=artist_data, errors=errors)
 
                 # after validation is correct, create a new entry of the data in the user table
                 cursor = create_cursor()
