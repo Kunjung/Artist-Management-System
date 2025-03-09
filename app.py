@@ -4,17 +4,16 @@ from MySQLdb.cursors import DictCursor
 import math, csv, os, hashlib, re
 from datetime import datetime
 
-PAGINATION_SIZE = 5
-UPLOAD_FILE_PATH = os.path.join(os.getcwd(), 'static/file_uploads')
+from config import PAGINATION_SIZE, UPLOAD_FILE_PATH, MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY, DEBUG_MODE
 
 app = Flask(__name__)
 
-app.secret_key = 'secret_key'
+app.secret_key = SECRET_KEY
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'artist_db'
+app.config['MYSQL_HOST'] = MYSQL_HOST
+app.config['MYSQL_USER'] = MYSQL_USER
+app.config['MYSQL_PASSWORD'] = MYSQL_PASSWORD
+app.config['MYSQL_DB'] = MYSQL_DB
 
 mysql = MySQL(app)
 
@@ -793,4 +792,4 @@ def test_db_connection():
     return list(test_values)
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', 5000, debug=True)
+    app.run('0.0.0.0', 5000, debug=DEBUG_MODE)
