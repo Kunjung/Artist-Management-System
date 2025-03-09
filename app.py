@@ -29,6 +29,11 @@ def verify_hash_password(password, db_hashed_password):
     h = hashlib.md5(password.encode())
     return h.hexdigest() == db_hashed_password
 
+def is_field_more_than_max_length(field, max_length):
+    if len(str(field)) > max_length:
+        return True
+    return False
+
 def validate_user_data(user_data):
     if 'email' in user_data:
         # validate email
@@ -39,6 +44,21 @@ def validate_user_data(user_data):
     for field in user_data.keys():
         field_data = user_data[field]
         if len(str(field_data)) == 0:
+            return False
+    if 'first_name' in user_data:
+        if is_field_more_than_max_length(user_data['first_name'], 255):
+            return False
+    if 'last_name' in user_data:
+        if is_field_more_than_max_length(user_data['last_name'], 255):
+            return False
+    if 'email' in user_data:
+        if is_field_more_than_max_length(user_data['email'], 255):
+            return False
+    if 'phone' in user_data:
+        if is_field_more_than_max_length(user_data['phone'], 20):
+            return False
+    if 'address' in user_data:
+        if is_field_more_than_max_length(user_data['address'], 255):
             return False
     return True
 
@@ -55,6 +75,30 @@ def validate_artist_data(artist_data):
     for field in artist_data.keys():
         field_data = artist_data[field]
         if len(str(field_data)) == 0:
+            return False
+    if 'name' in artist_data:
+        if is_field_more_than_max_length(artist_data['name'], 255):
+            return False
+    if 'address' in artist_data:
+        if is_field_more_than_max_length(artist_data['address'], 255):
+            return False
+    return True
+
+def validate_music_data(music_data):
+    # check if any empty value is passed or not
+    for field in music_data.keys():
+        field_data = music_data[field]
+        if len(str(field_data)) == 0:
+            return False
+    if 'title' in music_data:
+        if is_field_more_than_max_length(music_data['title'], 255):
+            return False
+    if 'album_name' in music_data:
+        if is_field_more_than_max_length(music_data['album_name'], 255):
+            return False
+    if 'genre' in music_data:
+        genre = music_data['genre']
+        if genre not in ('rnb', 'country', 'classic', 'rock', 'jazz'):
             return False
     return True
 
@@ -510,6 +554,9 @@ def add_music(artist_id):
                     'genre': genre
                 }
 
+                if not validate_music_data(music_data):
+                    return '<h1>Music data invalid</h1>'
+
                 # after validation is correct, create a new entry of the data in the user table
                 cursor = create_cursor()
                 # validation completed, and email is new. so can create the new user in user table
@@ -547,6 +594,9 @@ def edit_music(id):
                     'album_name': album_name,
                     'genre': genre
                 }
+
+                if not validate_music_data(music_data):
+                    return '<h1>Music data invalid</h1>'
 
                 cursor = create_cursor()
                 cursor.execute("SELECT * from music where id=%s", (id,))
