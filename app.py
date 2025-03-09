@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, s
 from flask_mysqldb import MySQL
 from MySQLdb.cursors import DictCursor
 import math, csv, os, hashlib, re
+from datetime import datetime
 
 PAGINATION_SIZE = 5
 UPLOAD_FILE_PATH = os.path.join(os.getcwd(), 'static/file_uploads')
@@ -60,6 +61,10 @@ def validate_user_data(user_data):
     if 'address' in user_data:
         if is_field_more_than_max_length(user_data['address'], 255):
             return False
+    if 'gender' in user_data:
+        gender = user_data['gender']
+        if gender not in ('m', 'f', 'o'):
+            return False
     return True
 
 def validate_artist_data(artist_data):
@@ -71,6 +76,14 @@ def validate_artist_data(artist_data):
         no_of_albums_released = str(artist_data['no_of_albums_released'])
         if not re.match(r'^[0-9]+$', no_of_albums_released):
             return False
+    if 'first_release_year' in artist_data:
+        first_release_year = str(artist_data['first_release_year'])
+        # check for 4 digit number starting with either 1 or 2
+        if not re.match(r'[12]\d{3}', first_release_year):
+            return False
+        current_year = datetime.now().year
+        if int(first_release_year) > current_year:
+            return False
     # check if any empty value is passed or not
     for field in artist_data.keys():
         field_data = artist_data[field]
@@ -81,6 +94,10 @@ def validate_artist_data(artist_data):
             return False
     if 'address' in artist_data:
         if is_field_more_than_max_length(artist_data['address'], 255):
+            return False
+    if 'gender' in artist_data:
+        gender = artist_data['gender']
+        if gender not in ('m', 'f', 'o'):
             return False
     return True
 
