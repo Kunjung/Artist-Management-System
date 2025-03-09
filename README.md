@@ -9,7 +9,7 @@ python app.py
 ```
 
 ## Updates so far:
-1. Added a function to connect to mysql db
+1. Added a helper function to connect to mysql database
 2. Created schema for user table
 3. Created schema for artist table
 4. Created schema for music table. Also added foreign key reference to artist table
@@ -34,11 +34,12 @@ python app.py
 23. Added validations to check if fields are empty or exceed their maximum lengths
 24. Added other validations: checked if email is correct, checked if gender value is correct,
     checked if first_release_year is correct, and checked if no_of_albums_released is correct.
-25. Maintained role based api access. 
+25. Used the above validations and displayed the correct error messages in form when validations fail
+26. Maintained role based api access. 
 * All access (user, artist, music) granted to super_admin
 * Limited access (artist, music) granted to artist_manager
-26. Refactored scripts and separated configurations to separate file
-27. Made UI more user friendly with bootstrap
-28. Removed password in /manage_user
-29. Deployed a live demo version
-30. TODO: Refactor and separate helper functions
+27. Refactored scripts and separated configurations to separate file
+28. Made UI more user friendly with bootstrap
+29. Removed password in /manage_user
+30. Refactored scripts and separated helper functions
+31. Deployed a live demo version
