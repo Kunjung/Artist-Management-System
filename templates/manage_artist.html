@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h3><a href="{{url_for('add_artist')}}">Add New Artist</a></h3>
-  <h3>Artist List</h3>
-  <table style="border: 1px solid black; border-style: dotted;">
+  <h3><a href="{{url_for('add_artist')}}" class="btn btn-success">Add New Artist</a></h3>
+  <h5>Artist List</h5>
+  <table class="table table-striped">
     <tr>
         <th>ID</th>
         <th>Name</th>
@@ -25,11 +25,11 @@
         <td>{{artist['first_release_year']}}</td>
         <td>{{artist['no_of_albums_released']}}</td>
         <td>
-            <a href={{url_for('list_artist_songs', artist_id=artist.id)}}>View songs</a>
+            <a href={{url_for('list_artist_songs', artist_id=artist.id)}} class="btn btn-primary">View songs</a>
         </td>
         <td>
-            <a href={{url_for('edit_artist', id=artist.id)}}>Edit</a> ...
-            <a href={{url_for('delete_artist', id=artist.id)}}>Delete</a>
+            <a href={{url_for('edit_artist', id=artist.id)}} class="btn btn-success">Edit</a><span>&nbsp;&nbsp;&nbsp;</span> 
+            <a href={{url_for('delete_artist', id=artist.id)}} class="btn btn-danger">Delete</a>
         </td>
     </tr>
     {% endfor %}
@@ -43,5 +43,13 @@
       <a href="{{url_for('manage_artist')}}?page={{current_page+1}}">Next</a>
     {% endif %}
   </p>
-  <h3><a href="{{url_for('export_artist')}}">CSV Export</a> ... <a href="{{url_for('import_artist')}}">CSV Import</a></h3>
+  <div class="row">
+      <div class="col-sm-6">
+          <a href="{{url_for('import_artist')}}" class="btn btn-success">CSV Import</a>
+      </div>
+      <div class="col-sm-6 text-end">
+          <a href="{{url_for('export_artist')}}" class="btn btn-success">CSV Export</a>
+      </div>
+  </div>
+
 {% endblock %}

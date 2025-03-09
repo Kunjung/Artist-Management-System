@@ -36,5 +36,5 @@ python app.py
 25. TODO: manage role based api access
 26. TODO: refactoring
 27. Made UI more user friendly with bootstrap
-28. TODO: remove password in /list_artist_songs
+28. Removed password in /manage_user
 29. Deployed a live demo version

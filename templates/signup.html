@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
+    {% if is_user_logged_in == False %}
+    <div class="row">
+        <div class="text-end">
+        <div><a href="{{url_for('home')}}" class="btn btn-dark">Return to Home</a></div>
+        </div>
+    </div>
+    {% endif %}
   <form action="{{url_for('signup')}}" method="post">
     <p>
         <label>Email</label>
@@ -49,9 +56,7 @@
         <label>Artist</label>
     </p>
     <p>
-        <input type="submit" value="Signup">
+        <input type="submit" value="Signup" class="btn btn-success">
     </p>
   </form>
-  <br/>
-  <a href="{{url_for('home')}}">Home</a>
 {% endblock %}

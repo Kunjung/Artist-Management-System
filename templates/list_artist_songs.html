@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h3><a href="{{url_for('add_music', artist_id=artist_id)}}">Add New Song</a></h3>
-  <h3>Song List by Artist: {{artist_name}}</h3>
+  <h3><a href="{{url_for('add_music', artist_id=artist_id)}}" class="btn btn-success">Add New Song</a></h3>
+  <h5>Song List by Artist: {{artist_name}}</h5>
   <table style="border: 1px solid black; border-style: dotted;">
     <tr>
         <th>ID</th>
@@ -20,8 +20,8 @@
         <td>{{song['album_name']}}</td>
         <td>{{song['genre']}}</td>
         <td>
-            <a href={{url_for('edit_music', id=song.id)}}>Edit</a> ...
-            <a href={{url_for('delete_music', id=song.id)}}>Delete</a>
+            <a href={{url_for('edit_music', id=song.id)}} class="btn btn-success">Edit</a><span>&nbsp;&nbsp;&nbsp;</span> 
+            <a href={{url_for('delete_music', id=song.id)}} class="btn btn-danger">Delete</a>
         </td>
     </tr>
     {% endfor %}

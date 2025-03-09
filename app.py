@@ -3,7 +3,7 @@ from flask_mysqldb import MySQL
 from MySQLdb.cursors import DictCursor
 import math, csv, os, hashlib
 
-PAGINATION_SIZE = 10
+PAGINATION_SIZE = 5
 UPLOAD_FILE_PATH = os.path.join(os.getcwd(), 'static/file_uploads')
 
 app = Flask(__name__)

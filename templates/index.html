@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
+  {% if is_user_logged_in == False %}
+  <div class="row">
+      <div class="text-end">
+      <div><a href="{{url_for('signup')}}" class="btn btn-dark">New Admin Signup</a></div>
+      </div>
+  </div>
+  {% endif %}
   <div class="row">
     <div class="d-flex gap-3 justify-content-center">
       <form action="{{url_for('login')}}" method="post">
@@ -10,14 +17,8 @@
         <div class="mb-2">
           <label>Password:<span>&nbsp;&nbsp;</span></label><input class="mr-4" type="password" name="password" id="password" placeholder="Password"/>
         </div>
-        <input type="submit" value="Log In">
+        <input type="submit" value="Log In" class="btn btn-success">
       </form>
     </div>
-  </div>
-  <div class="row">
-    <div class="d-flex justify-content-center">
-      <div><a href="{{url_for('signup')}}">Signup</a></div>
-    </div>
-  </div>
-  
+  </div>  
 {% endblock %}
