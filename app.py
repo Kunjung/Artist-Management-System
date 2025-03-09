@@ -624,6 +624,9 @@ def signup():
             'role': role
         }
 
+        if not validate_user_data(data):
+            return '<h1>User data invalid</h1>'
+
         # after validation is correct, create a new entry of the data in the user table
         cursor = create_cursor()
         # check if email is already present or not, if present redirect back to signup with error message: 'email already present'
