@@ -169,6 +169,9 @@ def edit_user(id):
                     'id': id
                 }
 
+                if not validate_user_data(user_data):
+                    return '<h1>User data invalid</h1>'
+
                 cursor = create_cursor()
                 cursor.execute("SELECT * from user where id=%s", (id,))
                 user_info = cursor.fetchone()
