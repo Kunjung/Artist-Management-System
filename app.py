@@ -353,6 +353,8 @@ def import_artist():
                 if 'artist_file' not in request.files:
                     return '<h1>File not uploaded</h1>'
                 uploaded_file = request.files['artist_file']
+                if len(uploaded_file.filename) == 0:
+                    return '<h1>File not uploaded</h1>'
                 file_path = os.path.join(UPLOAD_FILE_PATH, uploaded_file.filename)
                 uploaded_file.save(file_path)
                 with open(file_path) as file:

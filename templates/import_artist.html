@@ -3,16 +3,11 @@
 {% block content %}
   <form action="{{url_for('import_artist')}}" method="post" enctype="multipart/form-data">
     <p>
-        <label>File</label>
+        <label>Upload File:</label>
         <input type="file" name="artist_file" accept=".csv">
     </p>
     <p>
-        <input type="submit" value="CSV Import">
+        <input type="submit" value="Import data" class="btn btn-success">
     </p>
   </form>
-  <br/>
-  <br/>
-  <a href="{{url_for('dashboard')}}">Return to dashboard</a>
-  <br/>
-  <a href="{{url_for('logout')}}">Logout</a>
 {% endblock %}
