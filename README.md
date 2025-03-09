@@ -30,7 +30,7 @@ python app.py
 19. Added  parameterized queries to prevent sql injection
 20. Added password hashing during signup and login
 21. TODO: Add validation check while importing data for artist from CSV
-22. TODO: add validation for signup
+22. Added validation for admin signup
 23. TODO: remove artist_id in /list_artist_songs
 24. TODO: validation: check if phone number is correct, check if email is correct
 25. TODO: manage role based api access

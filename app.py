@@ -35,6 +35,11 @@ def validate_user_data(user_data):
         email = user_data['email']
         if not re.match(r'^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$', email):
             return False
+    # check if any empty value is passed or not
+    for field in user_data.keys():
+        field_data = user_data[field]
+        if len(str(field_data)) == 0:
+            return False
     return True
 
 def validate_artist_data(artist_data):
@@ -45,6 +50,11 @@ def validate_artist_data(artist_data):
     if 'no_of_albums_released' in artist_data:
         no_of_albums_released = str(artist_data['no_of_albums_released'])
         if not re.match(r'^[0-9]+$', no_of_albums_released):
+            return False
+    # check if any empty value is passed or not
+    for field in artist_data.keys():
+        field_data = artist_data[field]
+        if len(str(field_data)) == 0:
             return False
     return True
 

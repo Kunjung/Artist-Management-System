@@ -4,11 +4,11 @@
   <form action="{{url_for('edit_user',id=update_user_info['id'])}}" method="post">
     <p>
         <label>Email</label>
-        <input type="text" name="email" id="email" value="{{update_user_info['email']}}" required>
+        <input type="text" name="email" value="{{update_user_info['email']}}" required>
     </p>
     <p>
         <label for="password">Password</label>
-        <input type="password" name="password" id="password" value="{{update_user_info['password']}}" required>
+        <input type="password" name="password" required>
     </p>
     <p>
         <label>Firstname</label>
