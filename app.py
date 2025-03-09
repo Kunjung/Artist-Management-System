@@ -183,7 +183,7 @@ def add_user():
                 # TODO: validate form data is as expected
                 user_data = {
                     'email': email,
-                    'password': generate_hash_password(password),
+                    'password': generate_hash_password(password) if len(password) > 0 else '',
                     'first_name': first_name,
                     'last_name': last_name,
                     'gender': gender,
@@ -192,9 +192,12 @@ def add_user():
                     'dob': dob,
                     'role': role
                 }
-
-                if not validate_user_data(user_data):
-                    return '<h1>User data invalid</h1>'
+                
+                is_valid, errors = validate_user_data(user_data)
+                if not is_valid:
+                    print("add errors: ", errors)
+                    user_data['password'] = password  # use the unhashed password in the input field
+                    return render_template('add_user.html', username=username, userrole=userrole, is_user_logged_in=True, errors=errors, user_info=user_data)
 
                 # after validation is correct, create a new entry of the data in the user table
                 cursor = create_cursor()
@@ -202,7 +205,9 @@ def add_user():
                 cursor.execute("SELECT * from user where email=%s", (email,))
                 user_info = cursor.fetchone()
                 if user_info:
-                    return "<h1>Email already present</h1>"
+                    errors['email'] = 'email is already in use. please use another email.'
+                    user_data['password'] = password  # use the unhashed password in the input field
+                    return render_template('add_user.html', username=username, userrole=userrole, is_user_logged_in=True, errors=errors, user_info=user_data)
                 else:
                     # validation completed, and email is new. so can create the new user in user table
                     cursor.execute('''
@@ -707,7 +712,7 @@ def signup():
         # TODO: validate form data is as expected
         data = {
             'email': email,
-            'password': generate_hash_password(password),
+            'password': generate_hash_password(password) if len(password) > 0 else '',
             'first_name': first_name,
             'last_name': last_name,
             'gender': gender,
@@ -720,6 +725,7 @@ def signup():
         is_valid, errors = validate_user_data(data)
         if not is_valid:
             print("errors: ", errors)
+            data['password'] = password  # use the unhashed password in the input field
             return render_template('signup.html', is_user_logged_in=False, errors=errors, user_info=data)
 
         # after validation is correct, create a new entry of the data in the user table
@@ -729,6 +735,7 @@ def signup():
         user_info = cursor.fetchone()
         if user_info:
             errors['email'] = 'email is already in use. please use another email.'
+            data['password'] = password  # use the unhashed password in the input field
             return render_template("signup.html", is_user_logged_in=False, errors=errors, user_info=data) # TODO: include error that email is already present
         else:
             # validation completed, and email is new. so can create the new user in user table

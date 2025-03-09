@@ -4,49 +4,149 @@
   <form action="{{url_for('add_user')}}" method="post">
     <p>
         <label>Email</label>
-        <input type="email" name="email" id="email" required>
+        {% if 'email' in user_info %}
+            <input type="text" name="email" value="{{user_info['email']}}">
+        {% else %}
+            <input type="text" name="email" id="email">
+        {% endif %}
+        {% if 'email' in errors %}
+            <small class="text-danger">{{ errors['email'] }}</small>
+        {% endif %}
     </p>
     <p>
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" required>
+        <label>Password</label>
+        {% if 'password' in user_info %}
+            <input type="password" name="password" value="{{user_info['password']}}">
+        {% else %}
+            <input type="password" name="password">
+        {% endif %}
+        {% if 'password' in errors %}
+            <small class="text-danger">{{ errors['password'] }}</small>
+        {% endif %}
     </p>
     <p>
         <label>Firstname</label>
-        <input type="text" name="first_name" id="first_name" required>
+        {% if 'first_name' in user_info %}
+            <input type="text" name="first_name" value="{{user_info['first_name']}}">
+        {% else %}
+            <input type="text" name="first_name" id="first_name">
+        {% endif %}
+        
+        {% if 'first_name' in errors %}
+            <small class="text-danger">{{ errors['first_name'] }}</small>
+        {% endif %}
     </p>
     <p>
         <label>Lastname</label>
-        <input type="text" name="last_name" id="last_name" required>
+        {% if 'last_name' in user_info %}
+            <input type="text" name="last_name" value="{{user_info['last_name']}}">
+        {% else %}
+            <input type="text" name="last_name" id="last_name">
+        {% endif %}
+        
+
+        {% if 'last_name' in errors %}
+            <small class="text-danger">{{ errors['last_name'] }}</small>
+        {% endif %}
     </p>
     <p>
         <label>Gender</label>
-        <input type="radio" name="gender" value="m">
-        <label>Male</label>
-        <input type="radio" name="gender" value="f">
-        <label>Female</label>
-        <input type="radio" name="gender" value="o">
-        <label>Other</label>
+        {% if 'gender' in user_info %}
+            {% if user_info['gender'] == 'm' %}
+                <input type="radio" name="gender" value="m" checked required>
+            {% else %}
+                <input type="radio" name="gender" value="m" required>
+            {% endif %}
+            <label>Male</label>
+            {% if user_info['gender'] == 'f' %}
+                <input type="radio" name="gender" value="f" checked>
+            {% else %}
+                <input type="radio" name="gender" value="f">
+            {% endif %}
+            <label>Female</label>
+            {% if user_info['gender'] == 'o' %}
+                <input type="radio" name="gender" value="o" checked>
+            {% else %}
+                <input type="radio" name="gender" value="o">
+            {% endif %}
+            <label>Other</label>
+        {% else %}
+            <input type="radio" name="gender" value="m" required>
+            <label>Male</label>
+            <input type="radio" name="gender" value="f">
+            <label>Female</label>
+            <input type="radio" name="gender" value="o">
+            <label>Other</label>
+        {% endif %}
+        {% if 'gender' in errors %}
+            <small class="text-danger">{{ errors['gender'] }}</small>
+        {% endif %}
     </p>
     <p>
         <label>Phone</label>
-        <input type="text" name="phone" id="phone" required>
+        {% if 'phone' in user_info %}
+            <input type="text" name="phone" value="{{user_info['phone']}}">
+        {% else %}
+            <input type="text" name="phone" id="phone">
+        {% endif %}
+        
+        {% if 'phone' in errors %}
+            <small class="text-danger">{{ errors['phone'] }}</small>
+        {% endif %}
     </p>
     <p>
         <label>Address</label>
-        <input type="text" name="address" id="address" required>
+        {% if 'address' in user_info %}
+            <input type="text" name="address" value="{{user_info['address']}}">
+        {% else %}
+            <input type="text" name="address" id="address">
+        {% endif %}
+
+        {% if 'address' in errors %}
+            <small class="text-danger">{{ errors['address'] }}</small>
+        {% endif %}
     </p>
     <p>
         <label>Date of Birth</label>
-        <input type="date" name="dob" id="dob" required>
+        {% if 'dob' in user_info %}
+            <input type="text" name="dob" value="{{user_info['dob']}}">
+        {% else %}
+            <input type="date" name="dob" id="dob" required>
+        {% endif %}
+        
     </p>
     <p>
         <label>Role</label>
-        <input type="radio" name="role" value="super_admin">
-        <label>Super Admin</label>
-        <input type="radio" name="role" value="artist_manager">
-        <label>Artist Manager</label>
-        <input type="radio" name="role" value="artist">
-        <label>Artist</label>
+        {% if 'role' in user_info %}
+            {% if user_info['role'] == 'super_admin' %}
+                <input type="radio" name="role" value="super_admin" checked required>
+            {% else %}
+                <input type="radio" name="role" value="super_admin" required>
+            {% endif %}
+            <label>Super Admin</label>
+            {% if user_info['role'] == 'artist_manager' %}
+                <input type="radio" name="role" value="artist_manager" checked>
+            {% else %}
+                <input type="radio" name="role" value="artist_manager">
+            {% endif %}
+            <label>Artist Manager</label>
+            {% if user_info['role'] == 'artist' %}
+                <input type="radio" name="role" value="artist" checked>
+            {% else %}
+                <input type="radio" name="role" value="artist">
+            {% endif %}
+            <label>Artist</label>
+        {% else %}
+            <input type="radio" name="role" value="super_admin" required>
+            <label>Super Admin</label>
+            <input type="radio" name="role" value="artist_manager">
+            <label>Artist Manager</label>
+            <input type="radio" name="role" value="artist">
+            <label>Artist</label>
+        {% endif %}
+        {% if 'role' in errors %}
+            <small class="text-danger">{{ errors['role'] }}</small>
+        {% endif %}
     </p>
     <p>
         <input type="submit" value="Add New User" class="btn btn-success">

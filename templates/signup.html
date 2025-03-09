@@ -20,10 +20,15 @@
             <small class="text-danger">{{ errors['email'] }}</small>
         {% endif %}
     </p>
-    <p>
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password">
-    </p>
+        <label>Password</label>
+        {% if 'password' in user_info %}
+            <input type="password" name="password" value="{{user_info['password']}}">
+        {% else %}
+            <input type="password" name="password">
+        {% endif %}
+        {% if 'password' in errors %}
+            <small class="text-danger">{{ errors['password'] }}</small>
+        {% endif %}
     <p>
         <label>Firstname</label>
         {% if 'first_name' in user_info %}
