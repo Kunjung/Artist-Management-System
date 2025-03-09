@@ -110,18 +110,18 @@ def validate_music_data(music_data):
     for field in music_data.keys():
         field_data = music_data[field]
         if len(str(field_data)) == 0:
-            return False
+            return False, {field: f'{field} is empty'}
     if 'title' in music_data:
         if is_field_more_than_max_length(music_data['title'], 255):
-            return False
+            return False, {'title': 'exceeds max length 255'}
     if 'album_name' in music_data:
         if is_field_more_than_max_length(music_data['album_name'], 255):
-            return False
+            return False, {'album_name': 'exceeds max length 255'}
     if 'genre' in music_data:
         genre = music_data['genre']
         if genre not in ('rnb', 'country', 'classic', 'rock', 'jazz'):
-            return False
-    return True
+            return False, {'genre': "Allowed values 'rnb', 'country', 'classic', 'rock', 'jazz'"}
+    return True, {}
 
 @app.route('/')
 def home():
@@ -585,7 +585,14 @@ def add_music(artist_id):
                     'genre': genre
                 }
 
-                if not validate_music_data(music_data):
+                is_valid, errors = validate_music_data(music_data)
+                if not is_valid:
+                # if not validate_music_data(music_data):
+                    return render_template("add_music.html", 
+                                           username=username, userrole=userrole, 
+                                           artist_id=artist_id, artist_name=artist_name, 
+                                           music_info=music_data, errors=errors,
+                                           is_user_logged_in=True)
                     return '<h1>Music data invalid</h1>'
 
                 # after validation is correct, create a new entry of the data in the user table
@@ -623,11 +630,15 @@ def edit_music(id):
                     'artist_id': artist_id,
                     'title': title,
                     'album_name': album_name,
-                    'genre': genre
+                    'genre': genre,
+                    'id': id
                 }
 
-                if not validate_music_data(music_data):
-                    return '<h1>Music data invalid</h1>'
+                is_valid, errors = validate_music_data(music_data)
+                if not is_valid:
+                    return render_template("edit_music.html", music_info=music_data, errors=errors, 
+                                           username=username, userrole=userrole, 
+                                           is_user_logged_in=True)
 
                 cursor = create_cursor()
                 cursor.execute("SELECT * from music where id=%s", (id,))

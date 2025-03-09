@@ -4,11 +4,17 @@
   <form action="{{url_for('edit_music',id=music_info['id'])}}" method="post">
     <p>
         <label>Title</label>
-        <input type="text" name="title" value="{{music_info['title']}}" required>
+        <input type="text" name="title" value="{{music_info['title']}}">
+        {% if 'title' in errors %}
+            <small class="text-danger">{{ errors['title'] }}</small>
+        {% endif %}
     </p>
     <p>
         <label>Album name</label>
-        <input type="text" name="album_name" value="{{music_info['album_name']}}" required>
+        <input type="text" name="album_name" value="{{music_info['album_name']}}">
+        {% if 'album_name' in errors %}
+            <small class="text-danger">{{ errors['album_name'] }}</small>
+        {% endif %}
     </p>
     <p>
         <label>Genre</label>
