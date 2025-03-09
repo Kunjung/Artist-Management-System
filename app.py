@@ -38,6 +38,14 @@ def validate_user_data(user_data):
     return True
 
 def validate_artist_data(artist_data):
+    if 'first_release_year' in artist_data:
+        first_release_year = str(artist_data['first_release_year'])
+        if not re.match(r'^[0-9]+$', first_release_year):
+            return False
+    if 'no_of_albums_released' in artist_data:
+        no_of_albums_released = str(artist_data['no_of_albums_released'])
+        if not re.match(r'^[0-9]+$', no_of_albums_released):
+            return False
     return True
 
 @app.route('/')
@@ -270,6 +278,9 @@ def add_artist():
                     'no_of_albums_released': no_of_albums_released
                 }
 
+                if not validate_artist_data(artist_data):
+                    return '<h1>Artist data invalid</h1>'
+
                 # after validation is correct, create a new entry of the data in the user table
                 cursor = create_cursor()
                 # validation completed, and email is new. so can create the new user in user table
@@ -307,6 +318,9 @@ def edit_artist(id):
                     'no_of_albums_released': no_of_albums_released,
                     'id': id
                 }
+
+                if not validate_artist_data(artist_data):
+                    return '<h1>Artist data invalid</h1>'
 
                 cursor = create_cursor()
                 cursor.execute("SELECT * from artist where id=%s", (id,))
