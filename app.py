@@ -587,13 +587,15 @@ def add_music(artist_id):
 
                 is_valid, errors = validate_music_data(music_data)
                 if not is_valid:
-                # if not validate_music_data(music_data):
+                    cursor = create_cursor()
+                    cursor.execute("SELECT * FROM artist where id=%s LIMIT 1", (artist_id,))
+                    artist_info = cursor.fetchone()
+                    artist_name = artist_info['name']
                     return render_template("add_music.html", 
                                            username=username, userrole=userrole, 
                                            artist_id=artist_id, artist_name=artist_name, 
                                            music_info=music_data, errors=errors,
                                            is_user_logged_in=True)
-                    return '<h1>Music data invalid</h1>'
 
                 # after validation is correct, create a new entry of the data in the user table
                 cursor = create_cursor()

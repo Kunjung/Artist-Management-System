@@ -5,24 +5,76 @@
   <form action="{{url_for('add_music', artist_id=artist_id)}}" method="post">
     <p>
         <label>Title</label>
-        <input type="text" name="title" required>
+        {% if 'title' in music_info %}
+          <input type="text" name="title" value="{{music_info['title']}}">
+        {% else %}
+          <input type="text" name="title">
+        {% endif %}
+        {% if 'title' in errors %}
+            <small class="text-danger">{{ errors['title'] }}</small>
+        {% endif %}
     </p>
     <p>
         <label>Album name</label>
-        <input type="text" name="album_name" required>
+        {% if 'album_name' in music_info %}
+          <input type="text" name="album_name" value="{{music_info['album_name']}}">
+        {% else %}
+          <input type="text" name="album_name">
+        {% endif %}
+        {% if 'album_name' in errors %}
+            <small class="text-danger">{{ errors['album_name'] }}</small>
+        {% endif %}
     </p>
     <p>
         <label>Genre</label>
-        <input type="radio" name="genre" value="rnb">
-        <label>Rnb</label>
-        <input type="radio" name="genre" value="country">
-        <label>Country</label>
-        <input type="radio" name="genre" value="classic">
-        <label>Classic</label>
-        <input type="radio" name="genre" value="rock">
-        <label>Rock</label>
-        <input type="radio" name="genre" value="jazz">
-        <label>Jazz</label>
+        {% if 'genre' in music_info %}
+          {% if music_info['genre'] == 'rnb' %}
+              <input type="radio" name="genre" value="rnb" checked required>
+          {% else %}
+              <input type="radio" name="genre" value="rnb" required>
+          {% endif %}
+          <label>Rnb</label>
+
+          {% if music_info['genre'] == 'country' %}
+              <input type="radio" name="genre" value="country" checked>
+          {% else %}
+              <input type="radio" name="genre" value="country">
+          {% endif %}
+          <label>Country</label>
+
+          {% if music_info['genre'] == 'classic' %}
+              <input type="radio" name="genre" value="classic" checked>
+          {% else %}
+              <input type="radio" name="genre" value="classic">
+          {% endif %}
+          <label>Classic</label>
+
+          {% if music_info['genre'] == 'rock' %}
+              <input type="radio" name="genre" value="rock" checked>
+          {% else %}
+              <input type="radio" name="genre" value="rock">
+          {% endif %}
+          <label>Rock</label>
+
+          {% if music_info['genre'] == 'jazz' %}
+              <input type="radio" name="genre" value="jazz" checked>
+          {% else %}
+              <input type="radio" name="genre" value="jazz">
+          {% endif %}
+          <label>Jazz</label>
+        {% else %}
+          <label>Genre</label>
+          <input type="radio" name="genre" value="rnb" checked required>
+          <label>Rnb</label>
+          <input type="radio" name="genre" value="country">
+          <label>Country</label>
+          <input type="radio" name="genre" value="classic">
+          <label>Classic</label>
+          <input type="radio" name="genre" value="rock">
+          <label>Rock</label>
+          <input type="radio" name="genre" value="jazz">
+          <label>Jazz</label>
+        {% endif %}
     </p>
     <p>
         <input type="submit" value="Add Song" class="btn btn-success">
