@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, send_file
 from flask_mysqldb import MySQL
 from MySQLdb.cursors import DictCursor
-import math, csv, os, hashlib
+import math, csv, os, hashlib, re
 
 PAGINATION_SIZE = 5
 UPLOAD_FILE_PATH = os.path.join(os.getcwd(), 'static/file_uploads')
@@ -28,6 +28,17 @@ def generate_hash_password(password):
 def verify_hash_password(password, db_hashed_password):
     h = hashlib.md5(password.encode())
     return h.hexdigest() == db_hashed_password
+
+def validate_user_data(user_data):
+    if 'email' in user_data:
+        # validate email
+        email = user_data['email']
+        if not re.match(r'^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$', email):
+            return False
+    return True
+
+def validate_artist_data(artist_data):
+    return True
 
 @app.route('/')
 def home():
@@ -102,6 +113,9 @@ def add_user():
                     'dob': dob,
                     'role': role
                 }
+
+                if not validate_user_data(user_data):
+                    return '<h1>User data invalid</h1>'
 
                 # after validation is correct, create a new entry of the data in the user table
                 cursor = create_cursor()
