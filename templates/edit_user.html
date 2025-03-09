@@ -4,19 +4,31 @@
   <form action="{{url_for('edit_user',id=update_user_info['id'])}}" method="post">
     <p>
         <label>Email</label>
-        <input type="text" name="email" value="{{update_user_info['email']}}" required>
+        <input type="text" name="email" value="{{update_user_info['email']}}">
+        {% if 'email' in errors %}
+            <small class="text-danger">{{ errors['email'] }}</small>
+        {% endif %}
     </p>
     <p>
-        <label for="password">Password</label>
-        <input type="password" name="password" required>
+        <label>Password</label>
+        <input type="password" name="password">
+        {% if 'password' in errors %}
+            <small class="text-danger">{{ errors['password'] }}</small>
+        {% endif %}
     </p>
     <p>
         <label>Firstname</label>
-        <input type="text" name="first_name" id="first_name" value="{{update_user_info['first_name']}}" required>
+        <input type="text" name="first_name" value="{{update_user_info['first_name']}}">
+        {% if 'first_name' in errors %}
+            <small class="text-danger">{{ errors['first_name'] }}</small>
+        {% endif %}
     </p>
     <p>
         <label>Lastname</label>
-        <input type="text" name="last_name" id="last_name" value="{{update_user_info['last_name']}}" required>
+        <input type="text" name="last_name" value="{{update_user_info['last_name']}}">
+        {% if 'last_name' in errors %}
+            <small class="text-danger">{{ errors['last_name'] }}</small>
+        {% endif %}
     </p>
     <p>
         <label>Gender</label>
@@ -44,11 +56,17 @@
     </p>
     <p>
         <label>Phone</label>
-        <input type="text" name="phone" id="phone" value="{{update_user_info['phone']}}" required>
+        <input type="text" name="phone" value="{{update_user_info['phone']}}">
+        {% if 'phone' in errors %}
+            <small class="text-danger">{{ errors['phone'] }}</small>
+        {% endif %}
     </p>
     <p>
         <label>Address</label>
-        <input type="text" name="address" id="address" value="{{update_user_info['address']}}" required>
+        <input type="text" name="address" value="{{update_user_info['address']}}">
+        {% if 'address' in errors %}
+            <small class="text-danger">{{ errors['address'] }}</small>
+        {% endif %}
     </p>
     <p>
         <label>Date of Birth</label>

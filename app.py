@@ -242,7 +242,7 @@ def edit_user(id):
                 # TODO: validate form data is as expected
                 user_data = {
                     'email': email,
-                    'password': generate_hash_password(password),
+                    'password': generate_hash_password(password) if len(password) > 0 else '',
                     'first_name': first_name,
                     'last_name': last_name,
                     'gender': gender,
@@ -253,8 +253,11 @@ def edit_user(id):
                     'id': id
                 }
 
-                if not validate_user_data(user_data):
-                    return '<h1>User data invalid</h1>'
+                is_valid, errors = validate_user_data(user_data)
+                if not is_valid:
+                    print("errors: ", errors)
+                    user_data['password'] = password  # use the unhashed password in the input field
+                    return render_template("edit_user.html", update_user_info=user_data, username=username, userrole=userrole, is_user_logged_in=True, errors=errors, user_info=user_data)
 
                 cursor = create_cursor()
                 cursor.execute("SELECT * from user where id=%s", (id,))
