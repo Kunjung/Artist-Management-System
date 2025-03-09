@@ -40,32 +40,32 @@ def validate_user_data(user_data):
         # validate email
         email = user_data['email']
         if not re.match(r'^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$', email):
-            return False
+            return False, {'email': 'Email is invalid. Should be of the format test@email.com'}
     # check if any empty value is passed or not
     for field in user_data.keys():
         field_data = user_data[field]
         if len(str(field_data)) == 0:
-            return False
+            return False, {field: f'{field} is empty'}
     if 'first_name' in user_data:
         if is_field_more_than_max_length(user_data['first_name'], 255):
-            return False
+            return False, {'first_name': 'exceeds max length 255'}
     if 'last_name' in user_data:
         if is_field_more_than_max_length(user_data['last_name'], 255):
-            return False
+            return False, {'last_name': 'exceeds max length 255'}
     if 'email' in user_data:
         if is_field_more_than_max_length(user_data['email'], 255):
-            return False
+            return False, {'email': 'exceeds max length 255'}
     if 'phone' in user_data:
         if is_field_more_than_max_length(user_data['phone'], 20):
-            return False
+            return False, {'phone': 'exceeds max length 20'}
     if 'address' in user_data:
         if is_field_more_than_max_length(user_data['address'], 255):
-            return False
+            return False, {'address': 'exceeds max length 255'}
     if 'gender' in user_data:
         gender = user_data['gender']
         if gender not in ('m', 'f', 'o'):
-            return False
-    return True
+            return False, {'gender': 'Allowed values m, f, o'}
+    return True, {}
 
 def validate_artist_data(artist_data):
     if 'first_release_year' in artist_data:
@@ -692,6 +692,8 @@ def signup():
     if request.method == 'GET':
         return render_template("signup.html", is_user_logged_in=False)
     else:
+        print("request.form")
+        print(request.form)
         email = request.form["email"]
         password = request.form["password"]
         first_name = request.form["first_name"]
@@ -715,8 +717,10 @@ def signup():
             'role': role
         }
 
-        if not validate_user_data(data):
-            return '<h1>User data invalid</h1>'
+        is_valid, errors = validate_user_data(data)
+        if not is_valid:
+            print("errors: ", errors)
+            return render_template('signup.html', is_user_logged_in=False, errors=errors, user_info=data)
 
         # after validation is correct, create a new entry of the data in the user table
         cursor = create_cursor()
@@ -724,8 +728,8 @@ def signup():
         cursor.execute("SELECT * FROM user WHERE email = %s LIMIT 1", (email,))
         user_info = cursor.fetchone()
         if user_info:
-            return "<h1>Email already present</h1>"
-            return render_template("signup.html") # TODO: include error that email is already present
+            errors['email'] = 'email is already in use. please use another email.'
+            return render_template("signup.html", is_user_logged_in=False, errors=errors, user_info=data) # TODO: include error that email is already present
         else:
             # validation completed, and email is new. so can create the new user in user table
             # cursor.execute(f'''
