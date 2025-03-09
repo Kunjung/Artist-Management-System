@@ -403,8 +403,9 @@ def edit_artist(id):
                     'id': id
                 }
 
-                if not validate_artist_data(artist_data):
-                    return '<h1>Artist data invalid</h1>'
+                is_valid, errors = validate_artist_data(artist_data)
+                if not is_valid:
+                    return render_template("edit_artist.html", artist_info=artist_data, username=username, userrole=userrole, is_user_logged_in=True, errors=errors)
 
                 cursor = create_cursor()
                 cursor.execute("SELECT * from artist where id=%s", (id,))
