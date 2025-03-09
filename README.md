@@ -30,6 +30,9 @@ python app.py
 19. Added  parameterized queries to prevent sql injection
 20. Added password hashing during signup and login
 21. TODO: Add validation check while importing data for artist from CSV
+* limit max size of csv to 10 MB
+* before inserting any data, make sure the required artist data fields are present in the csv file
+* before inserting any data, make sure all validations pass for each fields. In case any validations fail, display error message and abort inserting data to database
 22. Added validation for admin signup
 23. Added validations to check if fields are empty or exceed their maximum lengths
 24. Added other validations: checked if email is correct, checked if gender value is correct,
