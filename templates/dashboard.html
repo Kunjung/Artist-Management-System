@@ -43,7 +43,9 @@
     {% endif %}
     {% if userrole == 'artist' %}
       <!-- display current artist's songs -->
-      <a>Manage Song</a>
+      <div class="col-sm-12">
+        <a href={{url_for('list_songs')}} class="btn btn-success">View songs</a>
+      </div>
     {% endif %}
   </div>
 {% endblock %}

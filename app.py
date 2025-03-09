@@ -588,6 +588,44 @@ def delete_music(id):
                 return redirect(url_for('list_artist_songs',artist_id=music_info['artist_id']))
     return redirect(url_for('home'))
 
+@app.route('/list_songs')
+def list_songs():
+    if "username" in session and "userrole" in session:
+        username = session["username"]
+        userrole = session["userrole"]
+        if userrole in ("super_admin", "artist_manager", "artist"):
+            page = request.args.get('page', 1)
+            page = int(page)
+            print("page: ", page)
+            cursor = create_cursor()
+            offset = PAGINATION_SIZE * (page - 1)
+            print("offset: ", offset)
+            cursor.execute("""
+                           SELECT music.id, music.artist_id, artist.name as artist_name, music.title, music.album_name, music.genre 
+                           FROM music 
+                           INNER JOIN 
+                           artist 
+                           ON music.artist_id = artist.id 
+                           LIMIT %s OFFSET %s
+                           """,
+                           (PAGINATION_SIZE, offset))
+            songlist = cursor.fetchall()
+            cursor.execute("SELECT count(*) as count FROM music")
+            total_music_count = cursor.fetchone()['count']
+            print("total_music_count: ", total_music_count)
+            total_page = math.ceil(total_music_count / PAGINATION_SIZE)
+            print("total_page: ", total_page)
+            return render_template(
+                "list_songs.html", 
+                username=username,
+                userrole=userrole,
+                songlist=songlist, 
+                total_page=total_page, 
+                current_page=page,
+                is_user_logged_in=True
+            )
+    return redirect(url_for('home'))
+
 @app.route('/login', methods=["POST"])
 def login():
     email = request.form["email"]
