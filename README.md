@@ -31,10 +31,14 @@ python app.py
 20. Added password hashing during signup and login
 21. TODO: Add validation check while importing data for artist from CSV
 22. Added validation for admin signup
-23. TODO: remove artist_id in /list_artist_songs
-24. TODO: validation: check if phone number is correct, check if email is correct
-25. TODO: manage role based api access
-26. TODO: refactoring
+23. Added validations to check if fields are empty or exceed their maximum lengths
+24. Added other validations: checked if email is correct, checked if gender value is correct,
+    checked if first_release_year is correct, and checked if no_of_albums_released is correct.
+25. Maintained role based api access. 
+* All access (user, artist, music) granted to super_admin
+* Limited access (artist, music) granted to artist_manager
+26. Refactored scripts and separated configurations to separate file
 27. Made UI more user friendly with bootstrap
 28. Removed password in /manage_user
 29. Deployed a live demo version
+30. TODO: Refactor and separate helper functions
