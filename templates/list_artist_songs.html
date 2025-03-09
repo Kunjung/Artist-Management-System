@@ -3,7 +3,7 @@
 {% block content %}
   <h3><a href="{{url_for('add_music', artist_id=artist_id)}}" class="btn btn-success">Add New Song</a></h3>
   <h5>Song List by Artist: {{artist_name}}</h5>
-  <table style="border: 1px solid black; border-style: dotted;">
+  <table class="table table-striped">
     <tr>
         <th>ID</th>
         <th>Artist ID</th>
