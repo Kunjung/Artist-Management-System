@@ -367,10 +367,12 @@ def import_artist():
                 # use the file and populate artist table with insert queries
                 print("request.files: ", request.files)
                 if 'artist_file' not in request.files:
-                    return '<h1>File not uploaded</h1>'
+                    errors = {'file': 'File not uploaded'}
+                    return render_template("import_artist.html", username=username, userrole=userrole, is_user_logged_in=True, errors=errors)
                 uploaded_file = request.files['artist_file']
                 if len(uploaded_file.filename) == 0:
-                    return '<h1>File not uploaded</h1>'
+                    errors = {'file': 'File not uploaded'}
+                    return render_template("import_artist.html", username=username, userrole=userrole, is_user_logged_in=True, errors=errors)
                 file_path = os.path.join(UPLOAD_FILE_PATH, uploaded_file.filename)
                 uploaded_file.save(file_path)
 
