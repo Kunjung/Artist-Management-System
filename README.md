@@ -2,7 +2,7 @@
 
 ## Setup Instructions:
 Make sure to have a mysql server running first.
-Modify the config.py file and add the mysql credentials there
+Modify the config.py file and add the mysql credentials there. After that, run the following commands in terminal to start the app.
 ```
 python3 -m venv venv
 source venv/bin/activate
