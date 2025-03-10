@@ -6,6 +6,7 @@ Modify the config.py file and add the mysql credentials there. After that, run t
 ```
 python3 -m venv venv
 source venv/bin/activate
+python initialize_db_tables.py
 pip install -r requirements.txt
 python app.py
 ```
