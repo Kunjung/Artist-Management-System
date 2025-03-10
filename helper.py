@@ -178,8 +178,8 @@ def validate_csv_file_data(file_path):
                 return False, {'file': f"Address exceeds max length 255 in row number {row_index}"}
 
             # verify if datetime fields are correct - dob (skip check for created_at and updated_at)
-            correct_date_format = "9/30/1997 0:00"
-            if not re.match(r'^(\d){1,2}/(\d){1,2}/(\d){4}\s(\d){1,2}:(\d){1,2}$', dob):
+            correct_date_format = "1990-12-30 00:00:00"
+            if not re.match(r'^(\d){4}-(\d){2}-(\d){2}\s(\d){2}:(\d){2}:(\d){2}$', dob):
                 return False, {'file': f"Found wrong dob '{dob}' in row number {row_index}. Correct example format: {correct_date_format}"}
             
             # check if gender is within accepted values 'm', 'f' or 'o'
@@ -198,6 +198,6 @@ def validate_csv_file_data(file_path):
 
             row_index += 1
 
-        return False, {'file': 'test test'}
+        # return False, {'file': 'test test'}
     # all data validated and ready for insert
     return True, {}

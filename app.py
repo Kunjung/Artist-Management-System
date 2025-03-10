@@ -392,10 +392,6 @@ def import_artist():
                     print("header: ")
                     print(header)
                     cursor = create_cursor()
-                    # TODO: verify that the required headers are present in the file
-                    # e.g. header must include name, dob, gender, address, first_release_year, no_of_albums_released
-                    # header can optionally exclude id, created_at, updated_at
-                    # TODO: also verify that the data is valid before inserting to table
                     for row in csv_file:
                         id, name, dob, gender, address, first_release_year, no_of_albums_released, created_at, updated_at = \
                             row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
