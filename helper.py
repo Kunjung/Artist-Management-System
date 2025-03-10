@@ -177,6 +177,10 @@ def validate_csv_file_data(file_path):
             if len(address) > 255:
                 return False, {'file': f"Address exceeds max length 255 in row number {row_index}"}
 
+            # verify if datetime fields are correct - dob (skip check for created_at and updated_at)
+            correct_date_format = "9/30/1997 0:00"
+            if not re.match(r'^(\d){1,2}/(\d){1,2}/(\d){4}\s(\d){1,2}:(\d){1,2}$', dob):
+                return False, {'file': f"Found wrong dob '{dob}' in row number {row_index}. Correct example format: {correct_date_format}"}
             row_index += 1
         
         return False, {'file': 'test test'}
