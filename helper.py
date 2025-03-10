@@ -26,6 +26,10 @@ def validate_user_data(user_data):
         email = user_data['email']
         if not re.match(r'^[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]{2,}$', email):
             return False, {'email': 'Email is invalid. Should be of the format test@email.com'}
+        
+    if 'unhashed_password' in user_data:
+        if len(user_data['unhashed_password']) < 5:
+            return False, {'password': 'Password must be at least 5 characters long'}
     
     if 'first_name' in user_data:
         if is_field_more_than_max_length(user_data['first_name'], 255):

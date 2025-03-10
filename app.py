@@ -87,6 +87,7 @@ def add_user():
                 user_data = {
                     'email': email,
                     'password': generate_hash_password(password) if len(password) > 0 else '',
+                    'unhashed_password': password,
                     'first_name': first_name,
                     'last_name': last_name,
                     'gender': gender,
@@ -145,6 +146,7 @@ def edit_user(id):
                 user_data = {
                     'email': email,
                     'password': generate_hash_password(password) if len(password) > 0 else '',
+                    'unhashed_password': password,
                     'first_name': first_name,
                     'last_name': last_name,
                     'gender': gender,
@@ -669,6 +671,7 @@ def signup():
         data = {
             'email': email,
             'password': generate_hash_password(password) if len(password) > 0 else '',
+            'unhashed_password': password,
             'first_name': first_name,
             'last_name': last_name,
             'gender': gender,
