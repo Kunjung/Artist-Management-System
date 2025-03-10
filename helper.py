@@ -153,9 +153,30 @@ def validate_csv_file_data(file_path):
             id, name, dob, gender, address, first_release_year, no_of_albums_released, created_at, updated_at = \
                 row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
             
+            required_data = {
+                'name': name,
+                'dob': dob,
+                'gender': gender,
+                'address': address,
+                'first_release_year': first_release_year,
+                'no_of_albums_released': no_of_albums_released,
+            }
+            # check if empty data is present in required_data values
+            for field in required_data.keys():
+                if len(required_data[field]) == 0:
+                    return False, {'file': f"Empty {field} in row number {row_index}"}
+
             # check if id is correct
-            if not re.match(r'^\d+$', id):
+            if not re.match(r'^\d+$', str(id)):
                 return False, {'file': f"Found wrong id '{id}' in row number {row_index}"}
+            
+            # check if name or address exceed max length 255
+            if len(name) > 255:
+                return False, {'file': f"Name exceeds max length 255 in row number {row_index}"}
+            
+            if len(address) > 255:
+                return False, {'file': f"Address exceeds max length 255 in row number {row_index}"}
+
             row_index += 1
         
         return False, {'file': 'test test'}
