@@ -1,6 +1,8 @@
 # Artist-Management-System
 
 ## Setup Instructions:
+Make sure to have a mysql server running first.
+Modify the config.py file and add the mysql credentials there
 ```
 python3 -m venv venv
 source venv/bin/activate
