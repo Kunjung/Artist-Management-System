@@ -6,6 +6,7 @@ import math, csv, os
 from config import PAGINATION_SIZE, UPLOAD_FILE_PATH, MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY, DEBUG_MODE
 from helper import generate_hash_password, verify_hash_password
 from helper import validate_user_data, validate_artist_data, validate_music_data
+from helper import validate_csv_file_data
 
 app = Flask(__name__)
 
@@ -372,6 +373,13 @@ def import_artist():
                     return '<h1>File not uploaded</h1>'
                 file_path = os.path.join(UPLOAD_FILE_PATH, uploaded_file.filename)
                 uploaded_file.save(file_path)
+
+                # validate file data before insert to database
+                is_valid, errors = validate_csv_file_data(file_path)
+
+                if not is_valid:
+                    return render_template("import_artist.html", username=username, userrole=userrole, is_user_logged_in=True, errors=errors)
+
                 with open(file_path) as file:
                     csv_file = csv.reader(file)
                     print("csv imported data:")

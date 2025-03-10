@@ -10,4 +10,6 @@ MYSQL_USER = 'root'
 MYSQL_PASSWORD = ''
 MYSQL_DB = 'artist_db'
 
+MAX_FILE_SIZE_IN_KB = 1024
+
 DEBUG_MODE = True

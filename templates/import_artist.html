@@ -9,5 +9,8 @@
     <p>
         <input type="submit" value="Import data" class="btn btn-success">
     </p>
+    {% if 'file' in errors %}
+      <small class="text-danger">{{ errors['file'] }}</small>
+    {% endif %}
   </form>
 {% endblock %}

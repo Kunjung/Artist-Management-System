@@ -1,5 +1,6 @@
-import hashlib, re
+import hashlib, re, os, csv
 from datetime import datetime
+from config import MAX_FILE_SIZE_IN_KB
 
 def generate_hash_password(password):
     h = hashlib.md5(password.encode())
@@ -104,4 +105,60 @@ def validate_music_data(music_data):
         genre = music_data['genre']
         if genre not in ('rnb', 'country', 'classic', 'rock', 'jazz'):
             return False, {'genre': "Allowed values 'rnb', 'country', 'classic', 'rock', 'jazz'"}
+    return True, {}
+
+def validate_csv_file_data(file_path):
+    file_size_in_kb = round(os.stat(file_path).st_size / 1024, 2)
+    print(f"Size of {file_path}: ", file_size_in_kb, " KB")
+    if file_size_in_kb > MAX_FILE_SIZE_IN_KB:
+        return False, {'file': f'File size of {file_size_in_kb} KB exceeds max file size of {MAX_FILE_SIZE_IN_KB} KB'}
+    
+    # validate file data row by row
+    with open(file_path) as file:
+        csv_file = csv.reader(file)
+        file_header = next(csv_file)
+        print("file_header: ")
+        print(file_header)
+
+        required_headers = ['id', 'name', 'dob', 'gender', 'address', 'first_release_year', 'no_of_albums_released', 'created_at', 'updated_at']
+        num_of_headers = len(required_headers)
+
+        common_headers = set(required_headers).intersection(set(file_header))
+        print("common_headers: ", common_headers)
+
+        is_all_header_present = common_headers == set(required_headers)
+        print("is_all_header_present: ", is_all_header_present)
+
+        if is_all_header_present == False:
+            return False, {'file': f'Headers missing. Headers should be: ({', '.join(required_headers)})'}
+        
+        # check if header is in correct order or not
+        for i, (header_1, header_2) in enumerate(zip(required_headers, file_header[:num_of_headers]), start=1):
+            if str(header_1).lower() != str(header_2).lower():
+                if i == 1:
+                    position_string = '1st'
+                elif i == 2:
+                    position_string = '2nd'
+                elif i == 3:
+                    position_string = '3rd'
+                else:
+                    position_string = f'{i}th'
+                return False, {'file': f"'{header_1}' should be in {position_string} column, not '{header_2}'"}
+
+
+        return False, {'file': 'test test'}
+        
+        # for row in csv_file:
+        #     print(row)
+        #     id, name, dob, gender, address, first_release_year, no_of_albums_released, created_at, updated_at = \
+        #         row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
+        #     params = {
+        #         'name': name,
+        #         'dob': dob,
+        #         'gender': gender,
+        #         'address': address,
+        #         'first_release_year': first_release_year,
+        #         'no_of_albums_released': no_of_albums_released
+        #     }
+    # no issues
     return True, {}
