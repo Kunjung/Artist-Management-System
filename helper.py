@@ -145,20 +145,19 @@ def validate_csv_file_data(file_path):
                     position_string = f'{i}th'
                 return False, {'file': f"'{header_1}' should be in {position_string} column, not '{header_2}'"}
 
-
-        return False, {'file': 'test test'}
+        # all ids are present and in correct order
+        # now can verify each data row by row
+        row_index = 2
+        for row in csv_file:
+            print(row)
+            id, name, dob, gender, address, first_release_year, no_of_albums_released, created_at, updated_at = \
+                row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
+            
+            # check if id is correct
+            if not re.match(r'^\d+$', id):
+                return False, {'file': f"Found wrong id '{id}' in row number {row_index}"}
+            row_index += 1
         
-        # for row in csv_file:
-        #     print(row)
-        #     id, name, dob, gender, address, first_release_year, no_of_albums_released, created_at, updated_at = \
-        #         row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8]
-        #     params = {
-        #         'name': name,
-        #         'dob': dob,
-        #         'gender': gender,
-        #         'address': address,
-        #         'first_release_year': first_release_year,
-        #         'no_of_albums_released': no_of_albums_released
-        #     }
+        return False, {'file': 'test test'}
     # no issues
     return True, {}
