@@ -181,12 +181,23 @@ def validate_csv_file_data(file_path):
             correct_date_format = "9/30/1997 0:00"
             if not re.match(r'^(\d){1,2}/(\d){1,2}/(\d){4}\s(\d){1,2}:(\d){1,2}$', dob):
                 return False, {'file': f"Found wrong dob '{dob}' in row number {row_index}. Correct example format: {correct_date_format}"}
-            row_index += 1
-
+            
             # check if gender is within accepted values 'm', 'f' or 'o'
             if gender not in ('m', 'f', 'o'):
                 return False, {'file': f"Found wrong gender '{gender}' in row number {row_index}"}
-        
+            
+            if not re.match(r'^[0-9]+$', no_of_albums_released):
+                return False, {'file': f"Found wrong no_of_albums_released '{no_of_albums_released}' in row number {row_index}"}
+
+            # check for 4 digit number starting with either 1 or 2
+            if not re.match(r'[12]\d{3}', first_release_year):
+                return False, {'file': f"Found wrong first_release_year '{first_release_year}' in row number {row_index}. Should be between 1000 and 2999"}
+            current_year = datetime.now().year
+            if int(first_release_year) > current_year:
+                return False, {'file': f"first_release_year value '{first_release_year}' exceeds current year {current_year} in row number {row_index}"}
+
+            row_index += 1
+
         return False, {'file': 'test test'}
     # all data validated and ready for insert
     return True, {}
