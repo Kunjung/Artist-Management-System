@@ -182,7 +182,11 @@ def validate_csv_file_data(file_path):
             if not re.match(r'^(\d){1,2}/(\d){1,2}/(\d){4}\s(\d){1,2}:(\d){1,2}$', dob):
                 return False, {'file': f"Found wrong dob '{dob}' in row number {row_index}. Correct example format: {correct_date_format}"}
             row_index += 1
+
+            # check if gender is within accepted values 'm', 'f' or 'o'
+            if gender not in ('m', 'f', 'o'):
+                return False, {'file': f"Found wrong gender '{gender}' in row number {row_index}"}
         
         return False, {'file': 'test test'}
-    # no issues
+    # all data validated and ready for insert
     return True, {}

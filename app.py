@@ -380,6 +380,8 @@ def import_artist():
                 is_valid, errors = validate_csv_file_data(file_path)
 
                 if not is_valid:
+                    if os.path.exists(file_path):
+                        os.remove(file_path) # remove invalid file
                     return render_template("import_artist.html", username=username, userrole=userrole, is_user_logged_in=True, errors=errors)
 
                 with open(file_path) as file:
