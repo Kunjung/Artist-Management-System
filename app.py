@@ -54,16 +54,19 @@ def manage_user():
             # only user with super_admin role should have access to manage users
             page = request.args.get('page', 1)
             page = int(page)
-            print("page: ", page)
+            if DEBUG_MODE:
+                print("page: ", page)
             cursor = create_cursor()
             offset = PAGINATION_SIZE * (page - 1)
             cursor.execute(f"SELECT * FROM user LIMIT {PAGINATION_SIZE} OFFSET {offset}")
             userlist = cursor.fetchall()
             cursor.execute(f"SELECT count(*) as count FROM user")
             total_user_count = cursor.fetchone()['count']
-            print("total_user_count: ", total_user_count)
+            if DEBUG_MODE:
+                print("total_user_count: ", total_user_count)
             total_page = math.ceil(total_user_count / PAGINATION_SIZE)
-            print("total_page: ", total_page)
+            if DEBUG_MODE:
+                print("total_page: ", total_page)
             return render_template("manage_user.html", username= username, userrole=userrole, userlist=userlist, total_page=total_page, current_page=page, is_user_logged_in=True)
         else:
             # User doesn't have permission to view this page, redirect to dashboard
@@ -105,7 +108,8 @@ def add_user():
                 
                 is_valid, errors = validate_user_data(user_data)
                 if not is_valid:
-                    print("add errors: ", errors)
+                    if DEBUG_MODE:
+                        print("add_user errors: ", errors)
                     user_data['password'] = password  # use the unhashed password in the input field
                     return render_template('add_user.html', username=username, userrole=userrole, is_user_logged_in=True, errors=errors, user_info=user_data)
 
@@ -165,7 +169,8 @@ def edit_user(id):
 
                 is_valid, errors = validate_user_data(user_data)
                 if not is_valid:
-                    print("errors: ", errors)
+                    if DEBUG_MODE:
+                        print("edit_user errors: ", errors)
                     user_data['password'] = password  # use the unhashed password in the input field
                     return render_template("edit_user.html", update_user_info=user_data, username=username, userrole=userrole, is_user_logged_in=True, errors=errors, user_info=user_data)
 
@@ -210,8 +215,9 @@ def delete_user(id):
                 return redirect(url_for("manage_user"))
             else:
                 delete_query = "DELETE FROM user WHERE id=%s"
-                print("delete_query: ")
-                print(delete_query)
+                if DEBUG_MODE:
+                    print("delete_user query: ")
+                    print(delete_query)
                 cursor.execute(delete_query, (id,))
                 mysql.connection.commit()
                 return redirect(url_for('manage_user'))
@@ -226,16 +232,19 @@ def manage_artist():
             # only user with super_admin or artist_manager role should have access to manage artist
             page = request.args.get('page', 1)
             page = int(page)
-            print("page: ", page)
+            if DEBUG_MODE:
+                print("page: ", page)
             cursor = create_cursor()
             offset = PAGINATION_SIZE * (page - 1)
             cursor.execute(f"SELECT * FROM artist LIMIT {PAGINATION_SIZE} OFFSET {offset}")
             artistlist = cursor.fetchall()
             cursor.execute(f"SELECT count(*) as count FROM artist")
             total_artist_count = cursor.fetchone()['count']
-            print("total_artist_count: ", total_artist_count)
+            if DEBUG_MODE:
+                print("total_artist_count: ", total_artist_count)
             total_page = math.ceil(total_artist_count / PAGINATION_SIZE)
-            print("total_page: ", total_page)
+            if DEBUG_MODE:
+                print("total_page: ", total_page)
             return render_template("manage_artist.html", username= username, userrole=userrole, artistlist=artistlist, total_page=total_page, current_page=page, is_user_logged_in=True)
         else:
             return redirect(url_for("dashboard"))
@@ -352,8 +361,9 @@ def delete_artist(id):
                 return "<h1>Artist ID is not present</h1>"
             else:
                 delete_query = "DELETE FROM artist WHERE id=%s"
-                print("delete_query: ")
-                print(delete_query)
+                if DEBUG_MODE:
+                    print("delete_artist query: ")
+                    print(delete_query)
                 cursor.execute(delete_query, (id,))
                 mysql.connection.commit()
                 return redirect(url_for('manage_artist'))
@@ -370,7 +380,8 @@ def import_artist():
                 return render_template("import_artist.html", username=username, userrole=userrole, is_user_logged_in=True)
             elif request.method == 'POST':
                 # use the file and populate artist table with insert queries
-                print("request.files: ", request.files)
+                if DEBUG_MODE:
+                    print("request.files: ", request.files)
                 if 'artist_file' not in request.files:
                     errors = {'file': 'File not uploaded'}
                     return render_template("import_artist.html", username=username, userrole=userrole, is_user_logged_in=True, errors=errors)
@@ -391,11 +402,13 @@ def import_artist():
 
                 with open(file_path) as file:
                     csv_file = csv.reader(file)
-                    print("csv imported data:")
-                    print("***" * 30)
+                    if DEBUG_MODE:
+                        print("csv imported data:")
+                        print("***" * 30)
                     header = next(csv_file)
-                    print("header: ")
-                    print(header)
+                    if DEBUG_MODE:
+                        print("header: ")
+                        print(header)
                     cursor = create_cursor()
                     for row in csv_file:
                         id, name, dob, gender, address, first_release_year, no_of_albums_released, created_at, updated_at = \
@@ -429,7 +442,8 @@ def export_artist():
             artists = cursor.fetchall()
             if artists:
                 artist_keys = artists[0].keys()
-                print("artist_keys: ", artist_keys)
+                if DEBUG_MODE:
+                    print("artist_keys: ", artist_keys)
                 with open("artists.csv", "w", newline="") as output_file:
                     dict_writer = csv.DictWriter(output_file, artist_keys)
                     dict_writer.writeheader()
@@ -446,22 +460,26 @@ def list_artist_songs(artist_id):
         if userrole in ("super_admin", "artist_manager"):
             page = request.args.get('page', 1)
             page = int(page)
-            print("page: ", page)
+            if DEBUG_MODE:
+                print("page: ", page)
             cursor = create_cursor()
             cursor.execute("SELECT * FROM artist WHERE id=%s", (artist_id,))
             artist_info = cursor.fetchone()
             if artist_info:
                 offset = PAGINATION_SIZE * (page - 1)
-                print("offset: ", offset)
+                if DEBUG_MODE:
+                    print("offset: ", offset)
                 artist_name = artist_info['name']
                 cursor.execute("SELECT * FROM music WHERE artist_id=%s LIMIT %s OFFSET %s",
                                (artist_id, PAGINATION_SIZE, offset))
                 songlist = cursor.fetchall()
                 cursor.execute("SELECT count(*) as count FROM music WHERE artist_id=%s", (artist_id,))
                 total_music_count = cursor.fetchone()['count']
-                print("total_music_count: ", total_music_count)
+                if DEBUG_MODE:
+                    print("total_music_count: ", total_music_count)
                 total_page = math.ceil(total_music_count / PAGINATION_SIZE)
-                print("total_page: ", total_page)
+                if DEBUG_MODE:
+                    print("total_page: ", total_page)
                 return render_template(
                     "list_artist_songs.html", 
                     username=username,
@@ -610,10 +628,12 @@ def list_songs():
         if userrole in ("super_admin", "artist_manager", "artist"):
             page = request.args.get('page', 1)
             page = int(page)
-            print("page: ", page)
+            if DEBUG_MODE:
+                print("page: ", page)
             cursor = create_cursor()
             offset = PAGINATION_SIZE * (page - 1)
-            print("offset: ", offset)
+            if DEBUG_MODE:
+                print("offset: ", offset)
             cursor.execute("""
                            SELECT music.id, music.artist_id, artist.name as artist_name, music.title, music.album_name, music.genre 
                            FROM music 
@@ -626,9 +646,11 @@ def list_songs():
             songlist = cursor.fetchall()
             cursor.execute("SELECT count(*) as count FROM music")
             total_music_count = cursor.fetchone()['count']
-            print("total_music_count: ", total_music_count)
+            if DEBUG_MODE:
+                print("total_music_count: ", total_music_count)
             total_page = math.ceil(total_music_count / PAGINATION_SIZE)
-            print("total_page: ", total_page)
+            if DEBUG_MODE:
+                print("total_page: ", total_page)
             return render_template(
                 "list_songs.html", 
                 username=username,
@@ -675,8 +697,9 @@ def signup():
     if request.method == 'GET':
         return render_template("signup.html", is_user_logged_in=False)
     else:
-        print("request.form")
-        print(request.form)
+        if DEBUG_MODE:
+            print("request.form")
+            print(request.form)
         email = request.form["email"]
         password = request.form["password"]
         first_name = request.form["first_name"]
@@ -702,7 +725,8 @@ def signup():
 
         is_valid, errors = validate_user_data(data)
         if not is_valid:
-            print("errors: ", errors)
+            if DEBUG_MODE:
+                print("signup errors: ", errors)
             data['password'] = password  # use the unhashed password in the input field
             return render_template('signup.html', is_user_logged_in=False, errors=errors, user_info=data)
 
@@ -744,8 +768,10 @@ def test_db_connection():
     mysql.connection.commit()
     cursor.execute("SELECT * FROM test_table")    
     test_values = cursor.fetchall()
-    # print(type(test_values))
-    # print(test_values)
+    if DEBUG_MODE:
+        print("/test_db_connection")
+        print(type(test_values))
+        print(test_values)
     return list(test_values)
 
 if __name__ == '__main__':

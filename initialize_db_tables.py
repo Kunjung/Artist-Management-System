@@ -1,5 +1,7 @@
 from app import create_cursor, app, mysql
 
+from helper import generate_hash_password
+
 def display_table_values(table_name, values):
     print(' ' * 100)
     print('Table Name: ' + table_name)
@@ -35,14 +37,14 @@ if __name__ == '__main__':
         # load example rows for user table
         cursor.execute('''
                        INSERT INTO user (first_name, last_name, email, password, phone, dob, gender, address, created_at, updated_at) 
-                            values('Natsuki', 'Subaru', 'subaru@rezero.com', 'subarupassword', '989979966899', '1995-12-26', 'm', 'Tokyo', now(), now())
-                       ''')
+                            values('Natsuki', 'Subaru', 'subaru@rezero.com', %s, '989979966899', '1995-12-25', 'm', 'Tokyo', now(), now())
+                       ''', (generate_hash_password('subaru')))
         cursor.execute('''
                        INSERT INTO user (first_name, last_name, email, password, phone, dob, gender, address, created_at, updated_at) 
-                            values('Emilia', 'Tan', 'emilia@rezero.com', 'emiliapassword', '38375956190', '1997-09-30', 'f', 'Elior Forest', now(), now())
-                       ''')
+                            values('Mr.', 'admin', 'admin@artist.com', %s, '38375956190', '1997-09-30', 'm', 'The Grid', now(), now())
+                       ''', (generate_hash_password('admin')))
         mysql.connection.commit()
-        cursor.execute("SELECT * FROM user")    
+        cursor.execute("SELECT * FROM user")
         user_values = cursor.fetchall()
         display_table_values('User', list(user_values))
 
@@ -66,11 +68,11 @@ if __name__ == '__main__':
         # load example rows for user table
         cursor.execute('''
                        INSERT INTO artist (name, dob, gender, address, first_release_year, no_of_albums_released, created_at, updated_at) 
-                            values('Hiroyuki Sawano', '1980-09-12', 'f', 'Tokyo', 2014, 43, now(), now())
+                            values('Michael Jackson', '1980-09-12', 'm', 'USA', 2014, 43, now(), now())
                        ''')
         cursor.execute('''
                        INSERT INTO artist (name, dob, gender, address, first_release_year, no_of_albums_released, created_at, updated_at) 
-                            values('Artist MYTH & ROID', '1990-01-01', 'f', 'Tokyo', 2016, 10, now(), now())
+                            values('Taylor Swift', '1990-01-01', 'f', 'USA', 2016, 10, now(), now())
                        ''')
         mysql.connection.commit()
         cursor.execute("SELECT * FROM artist")    
@@ -94,13 +96,13 @@ if __name__ == '__main__':
         # load example rows for music table
         cursor.execute('''
                        INSERT INTO music (artist_id, title, album_name, genre, created_at, updated_at) 
-                            values(1, 'Avid', 'eighty six', 'rock', now(), now())
+                            values(1, 'Billie jean', 'Michael', 'rock', now(), now())
                        ''')
         cursor.execute('''
                        INSERT INTO music (artist_id, title, album_name, genre, created_at, updated_at) 
-                            values(2, 'Hydra', 'overlord', 'country', now(), now())
+                            values(1, 'Remember the time', 'Michael', 'country', now(), now())
                        ''')
         mysql.connection.commit()
-        cursor.execute("SELECT * FROM music")    
+        cursor.execute("SELECT * FROM music")
         music_values = cursor.fetchall()
         display_table_values('Music', list(music_values))
