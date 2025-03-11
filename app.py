@@ -500,7 +500,7 @@ def add_music(artist_id):
     if "username" in session and "userrole" in session:
         username = session["username"]
         userrole = session["userrole"]
-        if userrole in ("super_admin", "artist_manager", "artist"):
+        if userrole in ("super_admin", "artist_manager"):
             if request.method == "POST":
                 # add new user and redirect to manage_users dashboard
                 title = request.form["title"]
@@ -548,7 +548,7 @@ def edit_music(id):
     if "username" in session and "userrole" in session:
         username = session["username"]
         userrole = session["userrole"]
-        if userrole in ("super_admin", "artist_manager", "artist"):
+        if userrole in ("super_admin", "artist_manager"):
             if request.method == "POST":
                 cursor = create_cursor()
                 cursor.execute("SELECT artist_id from music where id=%s", (id,))
@@ -607,7 +607,7 @@ def delete_music(id):
     if "username" in session and "userrole" in session:
         username = session["username"]
         userrole = session["userrole"]
-        if userrole in ("super_admin", "artist_manager", "artist"):
+        if userrole in ("super_admin", "artist_manager"):
             cursor = create_cursor()
             cursor.execute("SELECT * from music where id=%s", (id,))
             music_info = cursor.fetchone()
