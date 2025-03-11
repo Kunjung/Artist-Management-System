@@ -13,12 +13,18 @@
       <form action="{{url_for('login')}}" method="post">
         <div class="mb-2">
           <label>Email:<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></label><input class="mr-4" type="text" name="email" id="email" placeholder="Email"/>
+          {% if 'email' in errors %}
+            <small class="text-danger">{{ errors['email'] }}</small>
+          {% endif %}
         </div>
         <div class="mb-2">
           <label>Password:<span>&nbsp;&nbsp;</span></label><input class="mr-4" type="password" name="password" id="password" placeholder="Password"/>
+          {% if 'password' in errors %}
+            <small class="text-danger">{{ errors['password'] }}</small>
+          {% endif %}
         </div>
         <input type="submit" value="Log In" class="btn btn-success">
       </form>
     </div>
-  </div>  
+  </div>
 {% endblock %}

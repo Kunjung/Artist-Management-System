@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, s
 from flask_mysqldb import MySQL
 from MySQLdb.cursors import DictCursor
 import math, csv, os
+import json
 
 from config import PAGINATION_SIZE, UPLOAD_FILE_PATH, MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, SECRET_KEY, DEBUG_MODE
 from helper import generate_hash_password, verify_hash_password
@@ -28,6 +29,10 @@ def home():
     if "username" in session and "userrole" in session:
         # user is logged in. so redirect to dashboard
         return redirect(url_for("dashboard"))
+    if "login_error" in session:
+        errors = json.loads(session["login_error"])
+        session.pop("login_error", None)
+        return render_template("index.html", is_user_logged_in=False, errors=errors)
     return render_template("index.html", is_user_logged_in=False)
 
 @app.route('/dashboard')
@@ -648,15 +653,22 @@ def login():
         # check if password matches
         db_password = user_info["password"]
         if verify_hash_password(password, db_password) == True:
-            # return "<h1>Password Matched</h1>"
             session["username"] = user_info["first_name"] + " " + user_info["last_name"]
             session["userrole"] = user_info["role"]
             return redirect(url_for("dashboard"))
         else:
-            return "<h1>Password Incorrect</h1>"
+            errors = {
+                'password': 'Password incorrect'
+            }
+            session["login_error"] = json.dumps(errors)
+            return redirect(url_for('home'))
     else:
         # user is not present
-        return "<h1>Email not present</h1>"
+        errors = {
+            'email': 'Email not present'
+        }
+        session["login_error"] = json.dumps(errors)
+        return redirect(url_for('home'))
 
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
